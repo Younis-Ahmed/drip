@@ -9,7 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^0.9.5",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.33.0",
     "next": "14.2.13",
+    "pg": "^8.13.0",
     "react": "^18",
     "react-dom": "^18"
   },
@@ -17,6 +21,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "drizzle-kit": "^0.24.2",
     "eslint": "8.57.1",
     "eslint-config-next": "14.2.13",
     "eslint-config-prettier": "^9.1.0",
