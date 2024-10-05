@@ -7,6 +7,7 @@ export const UserBtn = async ({ user }: Session) => {
     return (
        <div>
             <h1>{user?.email}</h1>
+            
             <button onClick={() => signOut()}>Sign Out</button>
        </div>
     )
