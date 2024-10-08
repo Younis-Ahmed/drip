@@ -1,6 +1,15 @@
-import { timestamp, pgTable, text, primaryKey, integer } from 'drizzle-orm/pg-core';
+import {
+  timestamp,
+  pgTable,
+  text,
+  primaryKey,
+  integer,
+  boolean,
+  pgEnum,
+} from 'drizzle-orm/pg-core';
 import type { AdapterAccount } from 'next-auth/adapters';
 
+export const RoleEnum = pgEnum('role', ['USER', 'ADMIN']);
 
 export const users = pgTable('user', {
   id: text('id')
@@ -10,6 +19,8 @@ export const users = pgTable('user', {
   email: text('email').unique(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
+  twoFactorEnabled: boolean('twoFactorEnabled').default(false),
+  role: RoleEnum('role').default('USER'),
 });
 
 export const accounts = pgTable(
