@@ -21,10 +21,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
     }),
-    Twitter({
+    Twitter({ // TODO: Twitter Token needs a website to be set up
       clientId: process.env.TWITTER_CLIENT_ID,
       clientSecret: process.env.TWITTER_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
 });
