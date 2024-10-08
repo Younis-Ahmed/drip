@@ -17,6 +17,10 @@ import { z } from 'zod';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import { useAction } from 'next-safe-action/hooks';
+import { emailSignIn } from '@/server/actions/email-signin';
+import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 export const LoginForm = () => {
   const form = useForm({
@@ -27,8 +31,16 @@ export const LoginForm = () => {
     },
   });
 
+  const [error, setError] = useState<string | null>(null);
+
+  const { execute, status } = useAction(emailSignIn, {
+    onSuccess(data){
+      console.log(data);
+    }
+  });
+
   const onSubmit = (values: z.infer<typeof loginSchema>) => {
-    console.log(values);
+    execute(values);
   };
 
   return (
@@ -41,7 +53,7 @@ export const LoginForm = () => {
       <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} action=''>
-            <div >
+            <div>
               <FormField
                 control={form.control}
                 name='email'
@@ -84,7 +96,9 @@ export const LoginForm = () => {
                 <Link href='/auth/reset'>Forgot your password</Link>
               </Button>
             </div>
-            <Button type='submit' className='w-full my-2'>{'Login'}</Button>
+            <Button type='submit' className={cn('w-full py-2', status === 'executing' ? 'animate-pulse' : "")}>
+              {'Login'}
+            </Button>
           </form>
         </Form>
       </div>
