@@ -9,6 +9,7 @@ const actionController = createSafeActionClient();
 
 export const emailSignIn = actionController
   .schema(loginSchema)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   .action(async ({ parsedInput: { email, password, code } }) => {
     // Check if user exists in the database
     const existingUser = await db.query.users.findFirst({
