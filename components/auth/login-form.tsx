@@ -31,6 +31,7 @@ export const LoginForm = () => {
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
 
   const { execute, status } = useAction(emailSignIn, {
