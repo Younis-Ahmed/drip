@@ -12,20 +12,21 @@ import {
 } from '../ui/form';
 import { AuthCard } from './auth-card';
 import { useForm } from 'react-hook-form';
-import { loginSchema } from '@/types/login-schema';
+import { RegisterSchema } from '@/types/register-schema';
 import { z } from 'zod';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import { useAction } from 'next-safe-action/hooks';
-import { emailSignIn } from '@/server/actions/email-signin';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { emailRegister } from '@/server/actions/email-register';
 
 export const RegisterForm = () => {
-  const form = useForm({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
     defaultValues: {
+      name: '',
       email: '',
       password: '',
     },
@@ -33,14 +34,15 @@ export const RegisterForm = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
-
-  const { execute, status } = useAction(emailSignIn, {
-    onSuccess(data){
-      console.log(data);
-    }
+  const { status, execute } = useAction(emailRegister, {
+    onSuccess(data) {
+      if ('success' in data) {
+        console.log(data.success);
+      }
+    } 
   });
 
-  const onSubmit = (values: z.infer<typeof loginSchema>) => {
+  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
     execute(values);
   };
 
@@ -48,13 +50,31 @@ export const RegisterForm = () => {
     <AuthCard
       cardTitle='Create an account'
       backBtnHref='/auth/login'
-      backBtnLabel="Already have an account? Login"
+      backBtnLabel='Already have an account? Login'
       showSocials={true}
     >
       <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} action=''>
             <div>
+              <FormField
+                control={form.control}
+                name='name'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder='john doe'
+                        type='name'
+                      />
+                    </FormControl>
+                    <FormDescription />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name='email'
@@ -97,8 +117,11 @@ export const RegisterForm = () => {
                 <Link href='/auth/reset'>Forgot your password</Link>
               </Button>
             </div>
-            <Button type='submit' className={cn('w-full py-2', status === 'executing' ? 'animate-pulse' : "")}>
-              {'Login'}
+            <Button
+              type='submit'
+              className={cn('w-full py-2', status === 'executing' ? 'animate-pulse' : '')}
+            >
+              {'Register'}
             </Button>
           </form>
         </Form>
