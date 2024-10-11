@@ -13,7 +13,7 @@ import {
 import { AuthCard } from './auth-card';
 import { useForm } from 'react-hook-form';
 import { RegisterSchema } from '@/types/register-schema';
-import { set, z } from 'zod';
+import { z } from 'zod';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import Link from 'next/link';
@@ -21,6 +21,8 @@ import { useAction } from 'next-safe-action/hooks';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { emailRegister } from '@/server/actions/email-register';
+import { FormSuccess } from './form-success';
+import { FormError } from './form-error';
 
 export const RegisterForm = () => {
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -32,23 +34,28 @@ export const RegisterForm = () => {
     },
   });
 
-  const isErrorResponse = (data: any): data is { error: string } => {
-    return data && typeof data.error === 'string';
+  type DataResponse =
+    | { success: string; error?: undefined }
+    | { error: string; success?: undefined }
+    | undefined;
+
+  const isErrorResponse = (data: DataResponse): data is { error: string } => {
+    return !!data && typeof data.error === 'string';
   };
 
-  const isSuccessResponse = (data: any): data is { success: string } => {
-    return data && typeof data.success === 'string';
+  const isSuccessResponse = (data: DataResponse): data is { success: string } => {
+    return !!data && typeof data.success === 'string';
   };
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
   const { status, execute } = useAction(emailRegister, {
-    onSuccess(data) {
+    onSuccess({ data }) {
       if (isErrorResponse(data)) {
         setError(data.error);
       } else if (isSuccessResponse(data)) {
-        setSuccess(data.success); 
+        setSuccess(data.success);
       }
     },
   });
@@ -120,6 +127,8 @@ export const RegisterForm = () => {
                   </FormItem>
                 )}
               />
+              <FormSuccess message={success ?? undefined} />
+              <FormError message={error ?? undefined} />
               <Button size={'sm'} variant={'link'} asChild>
                 <Link href='/auth/reset'>Forgot your password</Link>
               </Button>
