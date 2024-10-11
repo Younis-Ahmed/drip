@@ -5,6 +5,8 @@ import bcrypt from 'bcrypt';
 import { db } from '..';
 import { eq } from 'drizzle-orm';
 import { users } from '@/server/schema';
+import { generateEmailVerificationToken } from './tokens';
+import { sendVerficationEmail } from './email';
 
 const actionController = createSafeActionClient();
 
@@ -20,18 +22,28 @@ export const emailRegister = actionController
     });
 
     if (existingUser) {
-        if(existingUser?.emailVerified) {
-            const verificationToken = 
-        }
-      return { error: "Email already in use" };
+      if (existingUser?.emailVerified) {
+        const verificationToken = await generateEmailVerificationToken(email);
+        // Send verification email
+        await sendVerficationEmail(verificationToken[0].email, verificationToken[0].token);
+
+        return { success: 'Email Confirmation resent' };
+      }
+      return { error: 'Email already in use' };
     }
-    return { success: "success" };
-    // Check if user has verified their email [TODO] - Implement email verification
 
-    // if (!existingUser?.emailVerified) {
+    // Logic to create user
+    await db.insert(users).values({
+      email,
+      name,
+      password: hashedPassword,
+    });
 
-    // }
+    const verificationToken = await generateEmailVerificationToken(email);
 
-    // console.info({ email, password, name });
-    // return { success: email };
+    // Send verification email
+
+    await sendVerficationEmail(verificationToken[0].email, verificationToken[0].token);
+
+    return { success: 'Confirmation email sent' };
   });
