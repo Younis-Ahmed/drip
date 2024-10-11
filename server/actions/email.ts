@@ -12,13 +12,13 @@ export const sendVerficationEmail = async (email: string, token: string) => {
     const confirmLink = `${domain}/auth/new-verification?token=${token}`;
     const { data, error } = await resend.emails.send({
         from: 'Acme <onboarding@resend.dev>',
-        to: ['delivered@resend.dev'],
+        to: [email],
         subject: 'Drip - Confirmation Email',
         react: EmailTemplate({ confirmLink }),
       });
     
       if (error) {
-        return console.error(error);
+        return console.error(`${error} from email.ts line 41`);
       }
     
       return data;
