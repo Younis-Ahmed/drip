@@ -13,7 +13,7 @@ import {
 import { AuthCard } from './auth-card';
 import { useForm } from 'react-hook-form';
 import { RegisterSchema } from '@/types/register-schema';
-import { z } from 'zod';
+import { set, z } from 'zod';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import Link from 'next/link';
@@ -32,14 +32,25 @@ export const RegisterForm = () => {
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const isErrorResponse = (data: any): data is { error: string } => {
+    return data && typeof data.error === 'string';
+  };
+
+  const isSuccessResponse = (data: any): data is { success: string } => {
+    return data && typeof data.success === 'string';
+  };
+
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
   const { status, execute } = useAction(emailRegister, {
     onSuccess(data) {
-      if ('success' in data) {
-        console.log(data.success);
+      if (isErrorResponse(data)) {
+        setError(data.error);
+      } else if (isSuccessResponse(data)) {
+        setSuccess(data.success); 
       }
-    } 
+    },
   });
 
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
@@ -64,11 +75,7 @@ export const RegisterForm = () => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        placeholder='john doe'
-                        type='name'
-                      />
+                      <Input {...field} placeholder='john doe' type='name' />
                     </FormControl>
                     <FormDescription />
                     <FormMessage />
