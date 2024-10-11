@@ -22,6 +22,34 @@
       "when": 1728375421784,
       "tag": "0002_glossy_drax",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1728628215695,
+      "tag": "0003_loving_groot",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1728628455490,
+      "tag": "0004_left_purple_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1728629691920,
+      "tag": "0005_mature_galactus",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1728630193313,
+      "tag": "0006_legal_iron_monger",
+      "breakpoints": true
     }
   ]
 }
