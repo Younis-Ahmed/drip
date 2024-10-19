@@ -25,25 +25,34 @@ export const emailRegister = actionController
       if (existingUser?.emailVerified) {
         const verificationToken = await generateEmailVerificationToken(email);
         // Send verification email
-        await sendVerficationEmail(verificationToken[0].email, verificationToken[0].token);
+        if (verificationToken && verificationToken[0]) {
+          await sendVerficationEmail(verificationToken[0].email, verificationToken[0].token);
+        } else {
+          return { error: 'Failed to generate verification token' };
+        }
 
         return { success: 'Email Confirmation resent' };
       }
       return { error: 'Email already in use' };
     }
 
-    // Logic to create user
-    await db.insert(users).values({
+    try {
+      // Logic to create user
+      await db.insert(users).values({
       email,
       name,
       password: hashedPassword,
-    });
+      });
+    } catch (error) {
+      return { error: `Error from email-register.ts: ${error} ` };
+    }
 
     const verificationToken = await generateEmailVerificationToken(email);
 
     // Send verification email
-
+    if (verificationToken && verificationToken[0]) {
     await sendVerficationEmail(verificationToken[0].email, verificationToken[0].token);
+    }
 
     return { success: 'Confirmation email sent' };
   });
