@@ -2,7 +2,7 @@
 
 import { eq } from "drizzle-orm";
 import { db } from "..";
-import { emailTokens } from "../schema";
+import { emailTokens, users } from "../schema";
 
 export const getVerificationTokenByEmail = async (email: string) => {
     try {
@@ -12,7 +12,7 @@ export const getVerificationTokenByEmail = async (email: string) => {
 
         return token;
     } catch (error) {
-        console.error(error);
+        console.error(`error from tokens.ts: ${error}`);
         return null;
     }
 }
@@ -24,7 +24,12 @@ export const generateEmailVerificationToken = async (email: string) => {
     const existingToken = await getVerificationTokenByEmail(email); // Check if token already exists
 
     if (existingToken) {
-        await db.delete(emailTokens).where(eq(emailTokens.id, existingToken.id));
+        try {
+            await db.delete(emailTokens).where(eq(emailTokens.id, existingToken.id));
+        } catch (error) {
+            console.error(`error from tokens.ts: ${error}`);
+            return null;
+        }
     }
 
     const newToken = await db.insert(emailTokens).values({
@@ -34,4 +39,31 @@ export const generateEmailVerificationToken = async (email: string) => {
     }).returning();
 
     return newToken;
+}
+
+export const newVerification = async (token: string) => {
+    const existingToken = await getVerificationTokenByEmail(token);
+    if (!existingToken) return { error: 'Invalid token' };
+
+    const hasExpired = new Date(existingToken.expires) < new Date();
+
+    if(hasExpired) {
+        return { error: 'Token has expired' };
+    }
+
+    const existingUser = await db.query.users.findFirst({
+        where: eq(users.email, existingToken.email),
+    });
+
+    if (!existingUser) {
+        return { error: 'User not found' };
+    }
+    await db.update(users).set({
+        emailVerified: new Date(),
+        email: existingToken.email,
+    })
+
+    await db.delete(emailTokens).where(eq(emailTokens.id, existingToken.id));
+
+    return { success: 'Email verified' };
 }
