@@ -23,7 +23,7 @@ export const metadata: Metadata = {
       rel: "icon",
       type: "image/webp",
       sizes: "32x32",
-      url: "/assets/logo.webp",
+      url: "/assets/images/logo.webp",
     }
   ]
 };
