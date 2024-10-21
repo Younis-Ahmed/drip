@@ -21,6 +21,8 @@ import { useAction } from 'next-safe-action/hooks';
 import { emailSignIn } from '@/server/actions/email-signin';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { FormSuccess } from './form-success';
+import { FormError } from './form-error';
 
 export const LoginForm = () => {
   const form = useForm({
@@ -33,11 +35,13 @@ export const LoginForm = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const { execute, status } = useAction(emailSignIn, {
-    onSuccess(data){
-      console.log(data);
-    }
+    onSuccess({ data }) {
+      if (data?.error) setError(data.error);
+      if (data?.success) setSuccess(data.success);
+    },
   });
 
   const onSubmit = (values: z.infer<typeof loginSchema>) => {
@@ -93,11 +97,16 @@ export const LoginForm = () => {
                   </FormItem>
                 )}
               />
+              <FormSuccess message={success ?? undefined} />
+              <FormError message={error ?? undefined} />
               <Button size={'sm'} variant={'link'} asChild>
                 <Link href='/auth/reset'>Forgot your password</Link>
               </Button>
             </div>
-            <Button type='submit' className={cn('w-full py-2', status === 'executing' ? 'animate-pulse' : "")}>
+            <Button
+              type='submit'
+              className={cn('w-full py-2', status === 'executing' ? 'animate-pulse' : '')}
+            >
               {'Login'}
             </Button>
           </form>
