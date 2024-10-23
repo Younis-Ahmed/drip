@@ -50,6 +50,13 @@
       "when": 1728630193313,
       "tag": "0006_legal_iron_monger",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1729682273596,
+      "tag": "0007_puzzling_queen_noir",
+      "breakpoints": true
     }
   ]
 }
