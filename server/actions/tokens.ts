@@ -83,3 +83,47 @@ export const getPasswordResetTokenbyToken = async (token: string) => {
     return null;
   }
 };
+
+export const getPasswordResetTokenbyEmail = async (email: string) => {
+  try {
+    const passwordResetToken = await db.query.passwordResetTokens.findFirst({
+      where: eq(passwordResetTokens.email, email),
+    });
+
+    return passwordResetToken;
+  } catch (error) {
+    console.error(`error from tokens.ts: ${error}`);
+    return null;
+  }
+};
+
+export const generatePasswordResetToken = async (email: string) => {
+  try {
+    const token = crypto.randomUUID();
+
+    const expires = new Date(new Date().getTime() + 3600 * 1000);
+
+    const existingToken = await getPasswordResetTokenbyEmail(token);
+
+    if (existingToken) {
+      try {
+        await db.delete(passwordResetTokens).where(eq(passwordResetTokens.id, existingToken.id));
+      } catch (error) {
+        console.error(`error from tokens.ts: ${error}`);
+        return null;
+      }
+    }
+    const passwordResetToken = await db
+      .insert(passwordResetTokens)
+      .values({
+        email,
+        token,
+        expires,
+      })
+      .returning();
+    return passwordResetToken;
+  } catch (error) {
+    console.error(`error from tokens.ts: ${error}`);
+    return null;
+  }
+};
