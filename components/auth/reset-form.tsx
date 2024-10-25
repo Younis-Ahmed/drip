@@ -21,42 +21,34 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { FormSuccess } from './form-success';
 import { FormError } from './form-error';
-import { newPasswordSchema } from '@/types/new-password-schema';
-import { newPassword } from '@/server/actions/new-password-form';
-import { useSearchParams } from 'next/navigation';
+import { ResetSchema } from '@/types/reset-schema';
+import { reset } from '@/server/actions/password-reset';
 
-export const NewPassowordForm = () => {
-  const form = useForm<z.infer<typeof newPasswordSchema>>({
-    resolver: zodResolver(newPasswordSchema),
+export const ResetForm = () => {
+  const form = useForm<z.infer<typeof ResetSchema>>({
+    resolver: zodResolver(ResetSchema),
     defaultValues: {
-      password: '',
+      email: '',
     },
   });
-
-  const searchParams = useSearchParams();
-
-  const token = searchParams.get('token');
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const { execute, status } = useAction(newPassword, {
+  const { execute, status } = useAction(reset, {
     onSuccess({ data }) {
       if (data?.error) setError(data.error);
       if (data?.success) setSuccess(data.success);
     },
   });
 
-  const onSubmit = (values: z.infer<typeof newPasswordSchema>) => {
-    execute({
-      password: values.password,
-      token,
-    });
+  const onSubmit = (values: z.infer<typeof ResetSchema>) => {
+    execute(values);
   };
 
   return (
     <AuthCard
-      cardTitle='Enter a new password'
+      cardTitle='Forgot your password?'
       backBtnHref='/auth/login'
       backBtnLabel='Back to login'
       showSocials={true}
@@ -67,17 +59,17 @@ export const NewPassowordForm = () => {
             <div>
               <FormField
                 control={form.control}
-                name='password'
+                name='email'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder='********'
-                        type='password'
+                        placeholder='younis@example.com'
+                        type='email'
                         disabled={status === 'executing'}
-                        autoComplete='current-password'
+                        autoComplete='email'
                       />
                     </FormControl>
                     <FormDescription />
