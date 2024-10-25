@@ -7,12 +7,18 @@ import { eq } from 'drizzle-orm';
 import { passwordResetTokens, users } from '../schema';
 import { db } from '..';
 import bcrypt from 'bcrypt';
+import { Pool } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-serverless';
 
 const action = createSafeActionClient();
 
 export const newPassword = action
   .schema(newPasswordSchema)
   .action(async ({ parsedInput: { password, token } }) => {
+    // Working with webscokets to use transactions
+    const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
+
+    const dbPool = drizzle(pool);
     // check the token and update the password
     if (!token) {
       return { error: 'Invalid token' };
@@ -40,7 +46,7 @@ export const newPassword = action
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await db.transaction(async db => {
+    await dbPool.transaction(async db => {
       await db
         .update(users)
         .set({
