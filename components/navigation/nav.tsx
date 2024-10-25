@@ -13,9 +13,9 @@ export default async function Nav() {
   return (
     <header className='py-8'>
       <nav>
-        <ul className='flex justify-between'>
+        <ul className='flex justify-between items-center'>
           <li>
-            <Link href='/'>
+            <Link href='/' aria-label='drip'>
             <div className='h-15 w-15 pb-3'>
               <Image src={Logo} alt='Logo' className='size-12' />
 
