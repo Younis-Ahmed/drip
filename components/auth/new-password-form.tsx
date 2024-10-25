@@ -50,7 +50,7 @@ export const NewPassowordForm = () => {
     <AuthCard
       cardTitle='Enter a new password'
       backBtnHref='/auth/login'
-      backBtnLabel="Back to login"
+      backBtnLabel='Back to login'
       showSocials={true}
     >
       <div>
@@ -68,6 +68,7 @@ export const NewPassowordForm = () => {
                         {...field}
                         placeholder='********'
                         type='password'
+                        disabled={status === 'executing'}
                         autoComplete='current-password'
                       />
                     </FormControl>
