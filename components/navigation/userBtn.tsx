@@ -14,11 +14,12 @@ import { LogOut, Moon, Settings, Sun, TruckIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Switch } from '../ui/switch';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export const UserBtn = ({ user }: Session) => {
   const { setTheme, theme } = useTheme();
   const [checked, setChecked] = useState(false);
-
+  const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const setSwitchTheme = () => {
     switch (theme) {
@@ -60,14 +61,19 @@ export const UserBtn = ({ user }: Session) => {
           <span className='text-xs font-medium text-secondary-foreground'>{user?.email}</span>
         </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className='group cursor-pointer py-2 font-medium transition-all duration-500 ease-in-out'>
+        <DropdownMenuItem 
+        onClick={() => router.push('dashboard/orders')}
+        className='group cursor-pointer py-2 font-medium ease-in-out'>
           <TruckIcon
             size={14}
             className='mr-3 transition-all duration-500 ease-in-out group-hover:translate-x-1'
           />{' '}
           My Order
         </DropdownMenuItem>
-        <DropdownMenuItem className='group cursor-pointer py-2 font-medium transition-all duration-500 ease-in-out'>
+        <DropdownMenuItem
+          onClick={() => router.push('dashboard/settings')}
+          className='group cursor-pointer py-2 font-medium ease-in-out'
+        >
           <Settings
             size={14}
             className='mr-3 transition-all duration-500 ease-in-out group-hover:rotate-180'
@@ -75,7 +81,7 @@ export const UserBtn = ({ user }: Session) => {
           Settings
         </DropdownMenuItem>
         {theme && (
-          <DropdownMenuItem className='cursor-pointer py-2 font-medium transition-all duration-500'>
+          <DropdownMenuItem className='cursor-pointer py-2 font-medium'>
             <div className='group flex items-center' onClick={event => event.stopPropagation()}>
               <div className='relative mr-3 flex'>
                 <Sun
@@ -112,7 +118,7 @@ export const UserBtn = ({ user }: Session) => {
         >
           <LogOut
             size={14}
-            className='mr-3 transition-all duration-500 ease-in-out  group-hover:scale-75'
+            className='mr-3 transition-all duration-500 ease-in-out group-hover:scale-75'
           />{' '}
           Sign Out
         </DropdownMenuItem>
