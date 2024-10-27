@@ -19,6 +19,7 @@ export const UserBtn = ({ user }: Session) => {
   const { setTheme, theme } = useTheme();
   const [checked, setChecked] = useState(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const setSwitchTheme = () => {
     switch (theme) {
       case 'dark':
