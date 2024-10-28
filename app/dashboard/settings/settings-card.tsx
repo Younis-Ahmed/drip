@@ -28,24 +28,35 @@ import { FormError } from '@/components/auth/form-error';
 import { FormSuccess } from '@/components/auth/form-success';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { useAction } from 'next-safe-action/hooks';
+import { Settings } from '@/server/actions/settings';
 
 type SettingsForm = {
   session: Session;
 };
 
 function SettingsCard(session: SettingsForm) {
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [success, setSuccess] = useState<string | undefined>(undefined);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [avatarUploading, setAvatarUploading] = useState<boolean>(false);
+
+  const { execute, status } = useAction(Settings, {
+    onSuccess({ data }) {
+      if (data?.error) setError(data.error);
+      if (data?.success) setSuccess(data.success);
+    },
+  });
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
     defaultValues: {
       password: undefined,
       newPassword: undefined,
+      image: session.session.user?.image || undefined,
       name: session.session.user?.name || undefined,
       email: session.session.user?.email || undefined,
-      //   isTwoFactorEnabled: session.session.user?.isTwoFactorEnabled || undefined,
+      isTwoFactorEnabled: session.session.user?.isTwoFactorEnabled || undefined,
     },
   });
 
@@ -117,7 +128,11 @@ function SettingsCard(session: SettingsForm) {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input disabled={status === 'executing'} placeholder='*****' {...field} />
+                    <Input
+                      disabled={status === 'executing' || session?.session.user.isOAuth === true}
+                      placeholder='*****'
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -130,7 +145,11 @@ function SettingsCard(session: SettingsForm) {
                 <FormItem>
                   <FormLabel>New Password</FormLabel>
                   <FormControl>
-                    <Input disabled={status === 'executing'} placeholder='*****' {...field} />
+                    <Input
+                      disabled={status === 'executing' || session?.session.user.isOAuth === true}
+                      placeholder='*****'
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -146,7 +165,11 @@ function SettingsCard(session: SettingsForm) {
                     Enable two factor Authentification for your account
                   </FormDescription>
                   <FormControl>
-                    <Switch disabled={status === 'executing'} />
+                    <Switch
+                      disabled={status === 'executing' || session?.session.user.isOAuth === true}
+                      checked={field.value}
+                      onChange={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
