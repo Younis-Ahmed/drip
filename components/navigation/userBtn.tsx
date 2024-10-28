@@ -20,19 +20,20 @@ export const UserBtn = ({ user }: Session) => {
   const { setTheme, theme } = useTheme();
   const [checked, setChecked] = useState(false);
   const router = useRouter();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const setSwitchTheme = () => {
-    switch (theme) {
-      case 'dark':
-        return setChecked(true);
-      case 'light':
-        return setChecked(false);
-      case 'system':
-        return setChecked(false);
-      default:
-        break;
-    }
-  };
+
+  // Maybe we can use this function to set the switch theme. Haven't decided yet.
+  // const setSwitchTheme = () => {
+  //   switch (theme) {
+  //     case 'dark':
+  //       return setChecked(true);
+  //     case 'light':
+  //       return setChecked(false);
+  //     case 'system':
+  //       return setChecked(false);
+  //     default:
+  //       break;
+  //   }
+  // };
 
   return (
     <DropdownMenu modal={false}>
