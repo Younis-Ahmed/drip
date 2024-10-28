@@ -18,7 +18,7 @@ export const AuthCard = ({
   showSocials,
 }: CardWrapperProps) => {
   return (
-    <Card>
+    <Card className='dark:border-white/60'>
       <CardHeader>
         <CardTitle>{cardTitle}</CardTitle>
       </CardHeader>
