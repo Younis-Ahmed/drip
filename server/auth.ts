@@ -7,7 +7,7 @@ import Twitter from 'next-auth/providers/twitter';
 import Credentials from 'next-auth/providers/credentials';
 import { loginSchema } from '@/types/login-schema';
 import { eq } from 'drizzle-orm';
-import { users } from './schema';
+import { accounts, users } from './schema';
 import bcrypt from 'bcrypt';
 
 dotenv.config({
@@ -19,6 +19,47 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET,
   session: {
     strategy: 'jwt',
+  },
+  callbacks: {
+    async session({ session, token }) {
+      if (session && token.sub) {
+        session.user.id = token.sub;
+      }
+      if (session.user && token.role) {
+        session.user.role = token.role as string;
+      }
+      if (session.user) {
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
+        session.user.isOAuth = token.isOAuth as boolean;
+        session.user.image = token.image as string;
+      }
+
+      return session;
+    },
+    async jwt({ token }) {
+      if (!token.sub) return token;
+
+      const exsitingUser = await db.query.users.findFirst({
+        where: eq(users.id, token.sub),
+      });
+
+      if (!exsitingUser) return token;
+
+      const exsitingAccount = await db.query.accounts.findFirst({
+        where: eq(accounts.userId, exsitingUser.id),
+      });
+
+      token.isOAuth = !!exsitingAccount;
+      token.name = exsitingUser.name;
+      token.email = exsitingUser.email;
+      token.role = exsitingUser.role;
+      token.isTwoFactorEnabled = exsitingUser.twoFactorEnabled;
+      token.image = exsitingUser.image;
+
+      return token;
+    },
   },
   providers: [
     // Providers
