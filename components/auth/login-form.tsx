@@ -23,9 +23,15 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { FormSuccess } from './form-success';
 import { FormError } from './form-error';
+import {
+  InputOTP,
+  InputOTPGroup,
+  // InputOTPSeparator,
+  InputOTPSlot,
+} from '@/components/ui/input-otp';
 
 export const LoginForm = () => {
-  const form = useForm({
+  const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
@@ -36,11 +42,13 @@ export const LoginForm = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [showTwoFactor, setShowTwoFactor] = useState<boolean>(false);
 
   const { execute, status } = useAction(emailSignIn, {
     onSuccess({ data }) {
       if (data?.error) setError(data.error);
       if (data?.success) setSuccess(data.success);
+      if (data?.twoFactor) setShowTwoFactor(true);
     },
   });
 
@@ -59,47 +67,76 @@ export const LoginForm = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} action=''>
             <div>
-              <FormField
-                control={form.control}
-                name='email'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder='younis@gmail.com'
-                        type='email'
-                        autoComplete='email'
-                      />
-                    </FormControl>
-                    <FormDescription />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='password'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder='********'
-                        type='password'
-                        autoComplete='current-password'
-                      />
-                    </FormControl>
-                    <FormDescription />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {showTwoFactor && (
+                <FormField
+                  control={form.control}
+                  name='code'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>We&apos;ve sent you a two factor code to your email.</FormLabel>
+                      <FormControl>
+                        <InputOTP disabled={status === 'executing'} {...field} maxLength={6}>
+                          <InputOTPGroup>
+                            <InputOTPSlot index={0} />
+                            <InputOTPSlot index={1} />
+                            <InputOTPSlot index={2} />
+                            <InputOTPSlot index={3} />
+                            <InputOTPSlot index={4} />
+                            <InputOTPSlot index={5} />
+                          </InputOTPGroup>
+                        </InputOTP>
+                      </FormControl>
+                      <FormDescription />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              {!showTwoFactor && (
+                <>
+                  <FormField
+                    control={form.control}
+                    name='email'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder='younis@gmail.com'
+                            type='email'
+                            autoComplete='email'
+                          />
+                        </FormControl>
+                        <FormDescription />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='password'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder='********'
+                            type='password'
+                            autoComplete='current-password'
+                          />
+                        </FormControl>
+                        <FormDescription />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
               <FormSuccess message={success ?? undefined} />
               <FormError message={error ?? undefined} />
-              <Button size={'sm'} variant={'link'} asChild>
+              <Button className='my-3 px-0' size={'sm'} variant={'link'} asChild>
                 <Link href='/auth/reset'>Forgot your password</Link>
               </Button>
             </div>
@@ -107,7 +144,7 @@ export const LoginForm = () => {
               type='submit'
               className={cn('w-full py-2', status === 'executing' ? 'animate-pulse' : '')}
             >
-              {'Login'}
+              {showTwoFactor ? 'Verify' : 'Sign in'}
             </Button>
           </form>
         </Form>
