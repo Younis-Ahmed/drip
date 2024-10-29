@@ -36,7 +36,7 @@ export default function DashboardNav({
                     animate={{ scale: 1 }}
                     layoutId='nav-underline'
                     transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                    className='-buttom-1 absolute left-0 z-0 h-[2px] w-full rounded-full bg-primary'
+                    className='-bottom-1 absolute left-0 z-0 h-[2px] w-full rounded-full bg-primary'
                   />
                 ) : null}
               </Link>
