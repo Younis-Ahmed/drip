@@ -68,7 +68,9 @@ body {
   }
 }
 
-
+[data-ut-element='button'][data-state='uploading']::after {
+  @apply bg-primary/50
+}
 /* @layer base {
   :root {
     --background: 0 0% 100%;
