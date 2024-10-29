@@ -19,7 +19,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   ] as const;
 
   const adminLinks =
-    session?.user.role === 'admin'
+    session?.user.role === 'ADMIN'
       ? ([
           {
             label: 'Analytics',
@@ -32,15 +32,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
             icon: <PenSquare size={16} />,
           },
           {
-            label: 'Analytics',
-            path: '/dashboard/analytics',
+            label: 'Products',
+            path: '/dashboard/products',
             icon: <Package size={16} />,
           },
         ] as const)
       : [];
 
   const allLinks = [...userLinks, ...adminLinks];
-
   return (
     <div>
       <DashboardNav allLinks={allLinks} />
