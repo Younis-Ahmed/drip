@@ -20,6 +20,7 @@ import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { zProductSchema } from '@/types/product-schema';
 import { DollarSign } from 'lucide-react';
+import Tiptap from './tiptap';
 
 function ProductForm() {
   const form = useForm<zProductSchema>({
@@ -37,7 +38,7 @@ function ProductForm() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+          <form onSubmit={() => console.log('hey')} className='space-y-8'>
             <FormField
               control={form.control}
               name='title'
@@ -57,7 +58,9 @@ function ProductForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
-                  <FormControl>{/* <Input placeholder='Your Title' {...field} /> */}</FormControl>
+                  <FormControl>
+                    <Tiptap val={field.value}/>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -71,14 +74,22 @@ function ProductForm() {
                   <FormControl>
                     <div className='flex items-center gap-2'>
                       <DollarSign size={36} className='rounded-md bg-muted p-2' />
-                      <Input type='number' placeholder='Your price in USD' step={0.1} min={0} {...field} />
+                      <Input
+                        type='number'
+                        placeholder='Your price in USD'
+                        step={0.1}
+                        min={0}
+                        {...field}
+                      />
                     </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button className='w-full' type='submit'>Submit</Button>
+            <Button className='w-full' type='submit'>
+              Submit
+            </Button>
           </form>
         </Form>
       </CardContent>
