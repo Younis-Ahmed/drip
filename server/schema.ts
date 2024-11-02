@@ -103,7 +103,7 @@ export const twoFactorTokens = pgTable(
   }),
 );
 
-export const products = pgTable('product', {
+export const products = pgTable('products', {
   id: serial('id').primaryKey(),
   description: text('description').notNull(),
   title: text('title').notNull(),
