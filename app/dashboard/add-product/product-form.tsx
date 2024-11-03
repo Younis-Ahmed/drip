@@ -38,18 +38,23 @@ function ProductForm() {
     mode: 'onChange',
   });
 
-
   const router = useRouter();
 
   const { execute, status } = useAction(createProduct, {
     onSuccess: ({ data }) => {
+      if (data?.error) {
+        toast.error(data.error);
+      }
       if (data?.success) {
         router.push('/dashboard/products');
         toast.success(data.success);
       }
     },
     onError: () => {
-      console.log('Product creation failed');
+      console.error('Product creation failed');
+    },
+    onExecute: () => {
+      toast.loading('Creating Product');
     },
   });
 
