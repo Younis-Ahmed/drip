@@ -18,17 +18,20 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
-import { zProductSchema } from '@/types/product-schema';
+import { ProductSchema, zProductSchema } from '@/types/product-schema';
 import { DollarSign } from 'lucide-react';
 import Tiptap from './tiptap';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 function ProductForm() {
   const form = useForm<zProductSchema>({
+    resolver: zodResolver(ProductSchema),
     defaultValues: {
       title: '',
       price: 0,
       description: '',
     },
+    mode: 'onChange',
   });
   return (
     <Card>
@@ -59,7 +62,7 @@ function ProductForm() {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Tiptap val={field.value}/>
+                    <Tiptap val={field.value} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -67,7 +70,7 @@ function ProductForm() {
             />
             <FormField
               control={form.control}
-              name='description'
+              name='price'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Product Price</FormLabel>
