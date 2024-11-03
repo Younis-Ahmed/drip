@@ -4,10 +4,18 @@ import { Toggle } from '@/components/ui/toggle';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Bold, Italic, List, ListOrdered, Strikethrough } from 'lucide-react';
+import { useFormContext } from 'react-hook-form';
+import { Placeholder } from '@tiptap/extension-placeholder';
 
 const Tiptap = ({ val }: { val: string }) => {
+  const { setValue } = useFormContext();
   const editor = useEditor({
     extensions: [
+      Placeholder.configure({
+        placeholder: 'Add a longer description here...',
+        emptyNodeClass:
+          'first:before:text-gray-600 first:before:float-left first:before:content-[attr(data-placeholder)] first:before:pointer-events-none',
+      }),
       StarterKit.configure({
         orderedList: {
           HTMLAttributes: {
@@ -23,6 +31,7 @@ const Tiptap = ({ val }: { val: string }) => {
     ],
     onUpdate: ({ editor }) => {
       const content = editor.getHTML();
+      setValue('description', content, { shouldValidate: true, shouldDirty: true });
     },
     editorProps: {
       attributes: {
