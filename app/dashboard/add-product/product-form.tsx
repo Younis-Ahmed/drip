@@ -22,6 +22,10 @@ import { ProductSchema, zProductSchema } from '@/types/product-schema';
 import { DollarSign } from 'lucide-react';
 import Tiptap from './tiptap';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAction } from 'next-safe-action/hooks';
+import { createProduct } from '@/server/actions/create-product';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 function ProductForm() {
   const form = useForm<zProductSchema>({
@@ -33,6 +37,26 @@ function ProductForm() {
     },
     mode: 'onChange',
   });
+
+
+  const router = useRouter();
+
+  const { execute, status } = useAction(createProduct, {
+    onSuccess: ({ data }) => {
+      if (data?.success) {
+        router.push('/dashboard/products');
+        toast.success(data.success);
+      }
+    },
+    onError: () => {
+      console.log('Product creation failed');
+    },
+  });
+
+  async function onSubmit(data: zProductSchema) {
+    execute(data);
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -41,7 +65,7 @@ function ProductForm() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={() => console.log('hey')} className='space-y-8'>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
             <FormField
               control={form.control}
               name='title'
@@ -90,7 +114,13 @@ function ProductForm() {
                 </FormItem>
               )}
             />
-            <Button className='w-full' type='submit'>
+            <Button
+              disabled={
+                status === 'executing' || !form.formState.isValid || !form.formState.isDirty
+              }
+              // className='w-full'
+              type='submit'
+            >
               Submit
             </Button>
           </form>
