@@ -6,7 +6,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
+  // DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -65,6 +65,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
     accessorKey: 'actions',
     header: 'Actions',
     cell: ({ row }) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const product = row.original;
       return (
         <DropdownMenu>
@@ -74,8 +75,8 @@ export const columns: ColumnDef<ProductColumn>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem className='dark:focus:bg-primary focus:bg-primary/50 cursor-pointer'>Edit Product</DropdownMenuItem>
+            {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
+            <DropdownMenuItem className='dark:focus:bg-muted focus:bg-primary/50 cursor-pointer'>Edit Product</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className='dark:focus:bg-destructive focus:bg-destructive/50 cursor-pointer'>Delete</DropdownMenuItem>
           </DropdownMenuContent>
