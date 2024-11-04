@@ -50,9 +50,9 @@ function ProductForm() {
         toast.success(data.success);
       }
     },
-    onError: () => {
-      console.error('Product creation failed');
-    },
+    // onError: () => {
+    //   console.error('Product creation failed');
+    // },
     onExecute: () => {
       toast.loading('Creating Product');
     },
