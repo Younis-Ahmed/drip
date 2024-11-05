@@ -3,7 +3,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardFooter,
+  // CardFooter,
   CardDescription,
   CardTitle,
 } from '@/components/ui/card';
@@ -24,8 +24,11 @@ import Tiptap from './tiptap';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAction } from 'next-safe-action/hooks';
 import { createProduct } from '@/server/actions/create-product';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
+import { getProduct } from '@/server/actions/get-product';
+import { revalidatePath } from 'next/cache';
+import { useEffect } from 'react';
 
 function ProductForm() {
   const form = useForm<zProductSchema>({
@@ -39,6 +42,32 @@ function ProductForm() {
   });
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editMode = searchParams.get('id');
+
+  const checkProduct = async (id: number) => {
+    if (editMode) {
+      const { success, error } = await getProduct(id);
+      if (error) {
+        toast.error(error);
+        revalidatePath('/dashboard/products');
+        return;
+      }
+      if (success) {
+        const id = parseInt(editMode);
+        form.setValue('title', success.title);
+        form.setValue('description', success.description);
+        form.setValue('price', success.price);
+        form.setValue('id', id);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (editMode) {
+      checkProduct(parseInt(editMode));
+    }
+  }, []);
 
   const { execute, status } = useAction(createProduct, {
     onSuccess: ({ data }) => {
@@ -54,7 +83,7 @@ function ProductForm() {
     //   console.error('Product creation failed');
     // },
     onExecute: () => {
-      toast.loading('Creating Product');
+      toast.loading(editMode ? 'Updating Product' : 'Creating Product');
     },
   });
 
@@ -65,8 +94,10 @@ function ProductForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Card Title</CardTitle>
-        <CardDescription>Card Description</CardDescription>
+        <CardTitle>{editMode ? 'Edit Product' : 'Create Product'}</CardTitle>
+        <CardDescription>
+          {editMode ? 'Make changes to existing product' : 'Add a brand new product'}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -126,14 +157,11 @@ function ProductForm() {
               // className='w-full'
               type='submit'
             >
-              Submit
+              {editMode ? 'Update Product' : 'Create Product'}
             </Button>
           </form>
         </Form>
       </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter>
     </Card>
   );
 }
