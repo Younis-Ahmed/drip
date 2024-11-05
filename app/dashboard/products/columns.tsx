@@ -15,6 +15,7 @@ import { MoreHorizontal } from 'lucide-react';
 import { useAction } from 'next-safe-action/hooks';
 import { deleteProduct } from '@/server/actions/delete-product';
 import { toast } from 'sonner';
+import Link from 'next/link';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -36,6 +37,9 @@ const ActionCell = ({ row }: { row: Row<ProductColumn> }) => {
         toast.success(data.success);
       }
     },
+    onExecute: () => {
+      toast.loading('Deleting product...');
+    },
   });
   const product = row.original;
 
@@ -49,7 +53,7 @@ const ActionCell = ({ row }: { row: Row<ProductColumn> }) => {
       <DropdownMenuContent>
         {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
         <DropdownMenuItem className='cursor-pointer focus:bg-primary/50 dark:focus:bg-muted'>
-          Edit Product
+          <Link href={`/dashboard/add-product?id=${product.id}`} />
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
