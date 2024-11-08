@@ -11,6 +11,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import type { AdapterAccount } from 'next-auth/adapters';
 import { createId } from '@paralleldrive/cuid2';
+import { relations } from 'drizzle-orm';
 
 export const RoleEnum = pgEnum('role', ['USER', 'ADMIN']);
 
@@ -110,3 +111,46 @@ export const products = pgTable('products', {
   created: timestamp('created', { mode: 'date' }).notNull().defaultNow(),
   price: real('price').notNull(),
 });
+
+export const productVariants = pgTable('product_variants', {
+  id: serial('id').primaryKey(),
+  color: text('color').notNull(),
+  productType: text('productType').notNull(),
+  updated: timestamp('updated', { mode: 'date' }).notNull().defaultNow(),
+  productID: serial('productID')
+    .notNull()
+    .references(() => products.id, { onDelete: 'cascade' }),
+});
+
+export const variantsImages = pgTable('product_variants', {
+  id: serial('id').primaryKey(),
+  url: text('url').notNull(),
+  size: real('size').notNull(),
+  name: text('name').notNull(),
+  order: real('order').notNull(),
+  variantID: serial('variantID')
+    .notNull()
+    .references(() => productVariants.id, { onDelete: 'cascade' }),
+});
+
+export const variantsTags = pgTable('product_variants', {
+  id: serial('id').primaryKey(),
+  tag: text('tag').notNull(),
+  variantID: serial('variantID')
+    .notNull()
+    .references(() => productVariants.id, { onDelete: 'cascade' }),
+});
+
+export const productRelation = relations(products, ({ many }) => ({
+  productVariants: many(productVariants, { relationName: 'productVariants' }),
+}));
+
+export const productVariantsRelations = relations(productVariants, ({ many, one }) => ({
+  productVariants: one(products, {
+    fields: [productVariants.productID],
+    references: [products.id],
+    relationName: 'productVariants',
+  }),
+  variantsImages: many(variantsImages, { relationName: 'variantsImages' }),
+  variantsTags: many(variantsTags, { relationName: 'variantsTags' }),
+}));
