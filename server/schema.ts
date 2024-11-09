@@ -112,7 +112,7 @@ export const products = pgTable('products', {
   price: real('price').notNull(),
 });
 
-export const productVariants = pgTable('product_variants', {
+export const productVariants = pgTable('productVariants', {
   id: serial('id').primaryKey(),
   color: text('color').notNull(),
   productType: text('productType').notNull(),
@@ -122,7 +122,7 @@ export const productVariants = pgTable('product_variants', {
     .references(() => products.id, { onDelete: 'cascade' }),
 });
 
-export const variantsImages = pgTable('variants_images', {
+export const variantsImages = pgTable('variantsImages', {
   id: serial('id').primaryKey(),
   url: text('url').notNull(),
   size: real('size').notNull(),
@@ -133,7 +133,7 @@ export const variantsImages = pgTable('variants_images', {
     .references(() => productVariants.id, { onDelete: 'cascade' }),
 });
 
-export const variantsTags = pgTable('variants_tags', {
+export const variantsTags = pgTable('variantsTags', {
   id: serial('id').primaryKey(),
   tag: text('tag').notNull(),
   variantID: serial('variantID')
