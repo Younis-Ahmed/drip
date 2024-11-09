@@ -79,6 +79,9 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: 'variants',
     header: 'Variants',
+    cell: ({ row }) => {
+      const variants = row.getValue('variants')
+    }
   },
   {
     accessorKey: 'price',
