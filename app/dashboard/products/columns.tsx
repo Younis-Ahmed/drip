@@ -16,6 +16,7 @@ import { useAction } from 'next-safe-action/hooks';
 import { deleteProduct } from '@/server/actions/delete-product';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { VariantsWithImagesTags } from '@/lib/infer-types';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -24,7 +25,7 @@ export type ProductColumn = {
   title: string;
   price: number;
   image: string;
-  variants: string[];
+  variants: VariantsWithImagesTags[];
 };
 
 const ActionCell = ({ row }: { row: Row<ProductColumn> }) => {
