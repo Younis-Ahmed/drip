@@ -24,7 +24,7 @@ export type InferResultType<
 
 export type VariantsWithImagesTags = InferResultType<
   'productVariants',
-  { variantImages: true; variantTags: true }
+  { variantsImages: true; variantTags: true }
 >
 
 export type ProductsWithVariants = InferResultType<'products', { productVariants: true }>;
