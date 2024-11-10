@@ -13,17 +13,17 @@ import {
 function ProductVariant({
   editMode,
   productID,
-  variants,
+  variant,
   children,
 }: {
-  eidtMode: boolean;
-  productID: number;
-  variants: VariantsWithImagesTags[];
+  editMode: boolean;
+  productID?: number;
+  variant?: VariantsWithImagesTags;
   children: React.ReactNode;
 }) {
   return (
     <Dialog>
-      <DialogTrigger>Open</DialogTrigger>
+      <DialogTrigger>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>
