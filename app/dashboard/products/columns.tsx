@@ -86,15 +86,25 @@ export const columns: ColumnDef<ProductColumn>[] = [
       const variants = row.getValue('variants') satisfies VariantsWithImagesTags[];
       return (
         <div className='text-xs font-medium'>
-          {variants.map(variants => (
-            <div key={variants.id}>
+          {variants.map(variant => (
+            <div key={variant.id}>
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger>
-                    <ProductVariant />
+                  <TooltipTrigger asChild>
+                    <ProductVariant
+                      editMode={false}
+                      productID={variant.productID}
+                      variant={variant}
+                    >
+                      <div
+                        className='h-5 w-5 rounded-full'
+                        key={variant.id}
+                        style={{ background: variant.color }}
+                      />
+                    </ProductVariant>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>{variants.productType}</p>
+                    <p>{variant.productType}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -102,13 +112,15 @@ export const columns: ColumnDef<ProductColumn>[] = [
           ))}
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
-                <span className='text-primary'>
-                <PlusCircle className='h-4 w-4'/>
+              <TooltipTrigger asChild>
+                <span>
+                  <ProductVariant editMode={false}>
+                    <PlusCircle />
+                  </ProductVariant>
                 </span>
               </TooltipTrigger>
               <TooltipContent>
-                <p>somelthing</p>
+                <p>Add a new variant</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
