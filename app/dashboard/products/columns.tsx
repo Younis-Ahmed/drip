@@ -11,12 +11,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal, PlusCircle } from 'lucide-react';
 import { useAction } from 'next-safe-action/hooks';
 import { deleteProduct } from '@/server/actions/delete-product';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { VariantsWithImagesTags } from '@/lib/infer-types';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import ProductVariant from './product-variant';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -81,8 +83,38 @@ export const columns: ColumnDef<ProductColumn>[] = [
     accessorKey: 'variants',
     header: 'Variants',
     cell: ({ row }) => {
-      const variants = row.getValue('variants')
-    }
+      const variants = row.getValue('variants') satisfies VariantsWithImagesTags[];
+      return (
+        <div className='text-xs font-medium'>
+          {variants.map(variants => (
+            <div key={variants.id}>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <ProductVariant />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{variants.productType}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          ))}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <span className='text-primary'>
+                <PlusCircle className='h-4 w-4'/>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>somelthing</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'price',
