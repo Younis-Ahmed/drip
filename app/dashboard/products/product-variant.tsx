@@ -9,6 +9,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { VariantSchema } from '@/types/variant-schema';
 
 function ProductVariant({
   editMode,
@@ -21,17 +25,29 @@ function ProductVariant({
   variant?: VariantsWithImagesTags;
   children: React.ReactNode;
 }) {
+  const form = useForm<z.infer<typeof VariantSchema>>({
+    resolver: zodResolver(VariantSchema),
+    defaultValues: {
+      tags: [],
+      variantImages: [],
+      color: '#000000',
+      editMode,
+      id: undefined,
+      productID,
+      productType: 'black',
+    },
+  });
   return (
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogTitle>{editMode ? 'Edit' : 'Create'} your variant</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your account and remove your
-            data from our servers.
+            Manage your product variants here. You can add tags, images, and more.
           </DialogDescription>
         </DialogHeader>
+        
       </DialogContent>
     </Dialog>
   );
