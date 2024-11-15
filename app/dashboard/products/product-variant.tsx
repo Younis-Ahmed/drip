@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { VariantSchema } from '@/types/variant-schema';
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -21,15 +21,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { InputTags } from './input-tags';
-
+import VariantImages from './variant-images';
 
 function onSubmit(val: z.infer<typeof VariantSchema>) {
   console.log(val);
 }
-function ProductVariant({
+export const ProductVariant = ({
   editMode,
   productID,
   variant,
@@ -39,7 +39,7 @@ function ProductVariant({
   productID?: number;
   variant?: VariantsWithImagesTags;
   children: React.ReactNode;
-}) {
+}) => {
   const form = useForm<z.infer<typeof VariantSchema>>({
     resolver: zodResolver(VariantSchema),
     defaultValues: {
@@ -55,7 +55,7 @@ function ProductVariant({
   return (
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className='max-h-[860px] overflow-y-scroll rounded-md lg:max-w-screen-lg'>
         <DialogHeader>
           <DialogTitle>{editMode ? 'Edit' : 'Create'} your variant</DialogTitle>
           <DialogDescription>
@@ -63,55 +63,55 @@ function ProductVariant({
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="productType"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Variant Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Pick a title for your variant" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="color"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Variant Color</FormLabel>
-              <FormControl>
-                <Input type='color' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="tags"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Variant Tags</FormLabel>
-              <FormControl>
-                <InputTags {...field} onChange={e => field.onChange(e)}/>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <VariantImages/> {/* TODO: Custom component needs creation*/}
-        {editMode && variant && (
-          <Button className='' onClick={(e) => e.preventDefault()} type='button'>
-            Delete Variant
-          </Button>
-        )}
-        <Button type="submit">{editMode ? "Update Variant" : "Create Variant"}</Button>
-      </form>
-    </Form>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+            <FormField
+              control={form.control}
+              name='productType'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Variant Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder='Pick a title for your variant' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='color'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Variant Color</FormLabel>
+                  <FormControl>
+                    <Input type='color' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='tags'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Variant Tags</FormLabel>
+                  <FormControl>
+                    <InputTags {...field} onChange={e => field.onChange(e)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <VariantImages />
+            {editMode && variant && (
+              <Button className='' onClick={e => e.preventDefault()} type='button'>
+                Delete Variant
+              </Button>
+            )}
+            <Button type='submit'>{editMode ? 'Update Variant' : 'Create Variant'}</Button>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
