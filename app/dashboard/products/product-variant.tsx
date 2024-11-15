@@ -17,13 +17,13 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { InputTags } from './input-tags';
 
 
 function onSubmit(val: z.infer<typeof VariantSchema>) {
@@ -97,7 +97,7 @@ function ProductVariant({
             <FormItem>
               <FormLabel>Variant Tags</FormLabel>
               <FormControl>
-                <InputTags /> {/* TODO: Custom component needs creation*/}
+                <InputTags {...field} onChange={e => field.onChange(e)}/>
               </FormControl>
               <FormMessage />
             </FormItem>
