@@ -16,6 +16,12 @@ export const ourFileRouter = {
       //   // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
       //   return { uploadedBy: metadata.userId };
     }),
+  variantUploader: f({ image: { maxFileSize: '4MB', maxFileCount: 10 } }).onUploadComplete(
+    async ({ metadata, file }) => {
+      console.log(file);
+      console.log(metadata);
+    },
+  ),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

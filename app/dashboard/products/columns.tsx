@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 import { VariantsWithImagesTags } from '@/lib/infer-types';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import ProductVariant from './product-variant';
+import { ProductVariant } from './product-variant';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
