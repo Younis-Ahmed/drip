@@ -1,22 +1,19 @@
-'use client';
+'use client'
 
-import {
+import type {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
+} from '@tanstack/react-table'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -24,20 +21,25 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+} from '@/components/ui/table'
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { useState } from 'react'
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
 }
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
-  const [sorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const table = useReactTable({
     data,
     columns,
@@ -49,10 +51,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       sorting,
       columnFilters,
     },
-  });
+  })
 
   return (
-    <div className='rounded-md border'>
+    <div className="rounded-md border">
       <Card>
         <CardHeader>
           <CardTitle>Your Products</CardTitle>
@@ -62,7 +64,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           <div>
             <div>
               <Input
-                placeholder='Filter Products'
+                placeholder="Filter Products"
                 value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
                 onChange={event => table.getColumn('title')?.setFilterValue(event.target.value)}
               />
@@ -71,59 +73,61 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               <TableHeader>
                 {table.getHeaderGroups().map(headerGroup => (
                   <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map(header => {
+                    {headerGroup.headers.map((header) => {
                       return (
                         <TableHead key={header.id}>
                           {header.isPlaceholder
                             ? null
                             : flexRender(header.column.columnDef.header, header.getContext())}
                         </TableHead>
-                      );
+                      )
                     })}
                   </TableRow>
                 ))}
               </TableHeader>
               <TableBody>
-                {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map(row => (
-                    <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                      {row.getVisibleCells().map(cell => (
-                        <TableCell key={cell.id}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                {table.getRowModel().rows?.length
+                  ? (
+                      table.getRowModel().rows.map(row => (
+                        <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                          {row.getVisibleCells().map(cell => (
+                            <TableCell key={cell.id}>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))
+                    )
+                  : (
+                      <TableRow>
+                        <TableCell colSpan={columns.length} className="h-24 text-center">
+                          No results.
                         </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={columns.length} className='h-24 text-center'>
-                      No results.
-                    </TableCell>
-                  </TableRow>
-                )}
+                      </TableRow>
+                    )}
               </TableBody>
             </Table>
-            <div className='flex items-center justify-end gap-4 pt-4'>
+            <div className="flex items-center justify-end gap-4 pt-4">
               <Button
                 disabled={!table.getCanPreviousPage()}
                 onClick={() => table.previousPage()}
-                variant='outline'
+                variant="outline"
               >
-                <ChevronLeftIcon className='h-4 w-4' />
+                <ChevronLeftIcon className="h-4 w-4" />
                 <span>Previous Page</span>
               </Button>
               <Button
                 disabled={!table.getCanNextPage()}
                 onClick={() => table.nextPage()}
-                variant='outline'
+                variant="outline"
               >
                 <span>Next page</span>
-                <ChevronRightIcon className='h-4 w-4' />
+                <ChevronRightIcon className="h-4 w-4" />
               </Button>
             </div>
           </div>
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
