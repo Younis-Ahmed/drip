@@ -1,15 +1,15 @@
-'use client';
+'use client'
 
-import { Toggle } from '@/components/ui/toggle';
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import { Bold, Italic, List, ListOrdered, Strikethrough } from 'lucide-react';
-import { useFormContext } from 'react-hook-form';
-import { Placeholder } from '@tiptap/extension-placeholder';
-import { useEffect } from 'react';
+import { Toggle } from '@/components/ui/toggle'
+import { Placeholder } from '@tiptap/extension-placeholder'
+import { EditorContent, useEditor } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import { Bold, Italic, List, ListOrdered, Strikethrough } from 'lucide-react'
+import { useEffect } from 'react'
+import { useFormContext } from 'react-hook-form'
 
-const Tiptap = ({ val }: { val: string }) => {
-  const { setValue } = useFormContext();
+function Tiptap({ val }: { val: string }) {
+  const { setValue } = useFormContext()
   const editor = useEditor({
     extensions: [
       Placeholder.configure({
@@ -31,8 +31,8 @@ const Tiptap = ({ val }: { val: string }) => {
       }),
     ],
     onUpdate: ({ editor }) => {
-      const content = editor.getHTML();
-      setValue('description', content, { shouldValidate: true, shouldDirty: true });
+      const content = editor.getHTML()
+      setValue('description', content, { shouldValidate: true, shouldDirty: true })
     },
     editorProps: {
       attributes: {
@@ -41,57 +41,57 @@ const Tiptap = ({ val }: { val: string }) => {
       },
     },
     content: val,
-  });
+  })
 
   useEffect(() => {
-    if (editor?.isEmpty) editor.commands.setContent(val);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [val]);
+    if (editor?.isEmpty)
+      editor.commands.setContent(val)
+  }, [val])
 
   return (
-    <div className='flex flex-col gap-2'>
+    <div className="flex flex-col gap-2">
       {editor && (
-        <div className='rounded-md border border-input'>
+        <div className="rounded-md border border-input">
           <Toggle
-            size={'sm'}
+            size="sm"
             pressed={editor.isActive('bold')}
             onPressedChange={() => editor.chain().focus().toggleBold().run()}
           >
-            <Bold className='h-4 w-4' />
+            <Bold className="h-4 w-4" />
           </Toggle>
           <Toggle
-            size={'sm'}
+            size="sm"
             pressed={editor.isActive('italic')}
             onPressedChange={() => editor.chain().focus().toggleItalic().run()}
           >
-            <Italic className='h-4 w-4' />
+            <Italic className="h-4 w-4" />
           </Toggle>
           <Toggle
-            size={'sm'}
+            size="sm"
             pressed={editor.isActive('strike')}
             onPressedChange={() => editor.chain().focus().toggleStrike().run()}
           >
-            <Strikethrough className='h-4 w-4' />
+            <Strikethrough className="h-4 w-4" />
           </Toggle>
           <Toggle
-            size={'sm'}
+            size="sm"
             pressed={editor.isActive('orderedList')}
             onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
           >
-            <ListOrdered className='h-4 w-4' />
+            <ListOrdered className="h-4 w-4" />
           </Toggle>
           <Toggle
-            size={'sm'}
+            size="sm"
             pressed={editor.isActive('bulletList')}
             onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
           >
-            <List className='h-4 w-4' />
+            <List className="h-4 w-4" />
           </Toggle>
         </div>
       )}
       <EditorContent editor={editor} />
     </div>
-  );
-};
+  )
+}
 
-export default Tiptap;
+export default Tiptap
