@@ -93,7 +93,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
                   <TooltipTrigger asChild>
                     <ProductVariant
                       editMode={false}
-                      productID={variant.productID}
+                      productID={row.original.id}
                       variant={variant}
                     >
                       <div

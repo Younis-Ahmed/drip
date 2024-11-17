@@ -25,10 +25,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { InputTags } from './input-tags';
 import VariantImages from './variant-images';
+import { useAction } from 'next-safe-action/hooks';
+import { toast } from 'sonner';
+import { createVariant } from '@/server/actions/create-variant';
 
-function onSubmit(val: z.infer<typeof VariantSchema>) {
-  console.log(val);
-}
 export const ProductVariant = ({
   editMode,
   productID,
@@ -40,6 +40,20 @@ export const ProductVariant = ({
   variant?: VariantsWithImagesTags;
   children: React.ReactNode;
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { execute, status } = useAction(createVariant, {
+    onExecute: () => {
+      toast.loading('Creating variant', { duration: 2000 });
+    },
+    onSuccess({ data }) {
+      if (data?.error) toast.error(data.error);
+      if (data?.success) toast.success(data.success);
+    },
+  });
+
+  function onSubmit(val: z.infer<typeof VariantSchema>) {
+    execute(val);
+  }
   const form = useForm<z.infer<typeof VariantSchema>>({
     resolver: zodResolver(VariantSchema),
     defaultValues: {
@@ -115,6 +129,6 @@ export const ProductVariant = ({
       </DialogContent>
     </Dialog>
   );
-}
+};
 
 export default ProductVariant;
