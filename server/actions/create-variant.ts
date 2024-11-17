@@ -12,13 +12,14 @@ export const createVariant = action
   .schema(VariantSchema)
   .action(
     async ({
-      parsedInput: { color, productID, productType, tags, variantImages: newImages, editMode },
+      parsedInput: { color, productID, productType, tags, variantImages: newImages, editMode, id },
     }) => {
       try {
         if (editMode) {
           const editVariant = await db
             .update(productVariants)
             .set({ color, productType, updated: new Date() })
+            .where(eq(productVariants.id, id as number))
             .returning();
           await db.delete(variantsTags).where(eq(variantsTags.variantID, editVariant[0].id));
           await db
