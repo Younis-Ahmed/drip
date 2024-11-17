@@ -28,6 +28,7 @@ import VariantImages from './variant-images';
 import { useAction } from 'next-safe-action/hooks';
 import { toast } from 'sonner';
 import { createVariant } from '@/server/actions/create-variant';
+import { useEffect, useState } from 'react';
 
 export const ProductVariant = ({
   editMode,
@@ -40,10 +41,40 @@ export const ProductVariant = ({
   variant?: VariantsWithImagesTags;
   children: React.ReactNode;
 }) => {
+
+  const [open, setOpen] = useState(false);
+
+  const setEdit = () => {
+    if (!editMode) {
+      form.reset();
+      return;
+    }
+    if (editMode && variant) {
+      form.setValue('editMode', true);
+      form.setValue('id', variant.id);
+      form.setValue('productID', variant.productID);
+      form.setValue('productType', variant.productType);
+      form.setValue('color', variant.color);
+      form.setValue(
+        'tags',
+        variant.variantsTags.map(tag => tag.tag),
+      );
+      form.setValue(
+        'variantImages',
+        variant.variantsImages.map(img => ({ name: img.name, size: img.size, url: img.url })),
+      );
+    }
+  };
+
+  useEffect(() => {
+    setEdit();
+  }, []);
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { execute, status } = useAction(createVariant, {
     onExecute: () => {
       toast.loading('Creating variant', { duration: 2000 });
+      setOpen(false);
     },
     onSuccess({ data }) {
       if (data?.error) toast.error(data.error);
@@ -67,7 +98,7 @@ export const ProductVariant = ({
     },
   });
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
       <DialogContent className='max-h-[860px] overflow-y-scroll rounded-md lg:max-w-screen-lg'>
         <DialogHeader>
@@ -118,12 +149,14 @@ export const ProductVariant = ({
               )}
             />
             <VariantImages />
-            {editMode && variant && (
-              <Button className='' onClick={e => e.preventDefault()} type='button'>
-                Delete Variant
-              </Button>
-            )}
-            <Button type='submit'>{editMode ? 'Update Variant' : 'Create Variant'}</Button>
+            <div className='flex gap-4 items-center justify-center'>
+              {editMode && variant && (
+                <Button variant={'destructive'} onClick={e => e.preventDefault()} type='button'>
+                  Delete Variant
+                </Button>
+              )}
+              <Button type='submit'>{editMode ? 'Update Variant' : 'Create Variant'}</Button>
+            </div>
           </form>
         </Form>
       </DialogContent>
