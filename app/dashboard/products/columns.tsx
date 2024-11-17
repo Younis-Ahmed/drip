@@ -85,17 +85,13 @@ export const columns: ColumnDef<ProductColumn>[] = [
     cell: ({ row }) => {
       const variants = row.getValue('variants') satisfies VariantsWithImagesTags[];
       return (
-        <div className='text-xs font-medium'>
+        <div className='flex gap-2 text-xs font-medium'>
           {variants.map(variant => (
             <div key={variant.id}>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <ProductVariant
-                      editMode={false}
-                      productID={row.original.id}
-                      variant={variant}
-                    >
+                    <ProductVariant editMode={false} productID={row.original.id} variant={variant}>
                       <div
                         className='h-5 w-5 rounded-full'
                         key={variant.id}
