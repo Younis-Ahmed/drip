@@ -29,6 +29,7 @@ import { useAction } from 'next-safe-action/hooks';
 import { toast } from 'sonner';
 import { createVariant } from '@/server/actions/create-variant';
 import { useEffect, useState } from 'react';
+import { deleteVariant } from '@/server/actions/delete-variant';
 
 export const ProductVariant = ({
   editMode,
@@ -41,7 +42,6 @@ export const ProductVariant = ({
   variant?: VariantsWithImagesTags;
   children: React.ReactNode;
 }) => {
-
   const [open, setOpen] = useState(false);
 
   const setEdit = () => {
@@ -74,6 +74,17 @@ export const ProductVariant = ({
   const { execute, status } = useAction(createVariant, {
     onExecute: () => {
       toast.loading('Creating variant', { duration: 2000 });
+      setOpen(false);
+    },
+    onSuccess({ data }) {
+      if (data?.error) toast.error(data.error);
+      if (data?.success) toast.success(data.success);
+    },
+  });
+
+  const variantAction = useAction(deleteVariant, {
+    onExecute: () => {
+      toast.loading('Deleting variant', { duration: 2000 });
       setOpen(false);
     },
     onSuccess({ data }) {
@@ -149,9 +160,16 @@ export const ProductVariant = ({
               )}
             />
             <VariantImages />
-            <div className='flex gap-4 items-center justify-center'>
+            <div className='flex items-center justify-center gap-4'>
               {editMode && variant && (
-                <Button variant={'destructive'} onClick={e => e.preventDefault()} type='button'>
+                <Button
+                  variant={'destructive'}
+                  onClick={e => {
+                    e.preventDefault();
+                    variantAction.execute({ id: variant.id });
+                  }}
+                  type='button'
+                >
                   Delete Variant
                 </Button>
               )}
