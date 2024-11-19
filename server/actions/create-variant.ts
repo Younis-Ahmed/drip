@@ -3,11 +3,20 @@
 import { VariantSchema } from '@/types/variant-schema';
 import { createSafeActionClient } from 'next-safe-action';
 import { db } from '..';
-import { productVariants, variantsImages, variantsTags } from '../schema';
+import { products, productVariants, variantsImages, variantsTags } from '../schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
-
+import { algoliasearch } from 'algoliasearch';
 const action = createSafeActionClient();
+
+const client = algoliasearch(
+  process.env.ALGOLIA_APP_ID as string,
+  process.env.ALGOLIA_SECRET_KEY as string,
+);
+
+// const algoliaIndex = await client.searchSingleIndex({
+//   indexName: 'products',
+// });
 export const createVariant = action
   .schema(VariantSchema)
   .action(
@@ -35,6 +44,15 @@ export const createVariant = action
               order: idx,
             })),
           );
+          await client.addOrUpdateObject({
+            indexName: 'products',
+            objectID: editVariant[0].id.toString(),
+            body: {
+              id: editVariant[0].productID,
+              productType: editVariant[0].productType,
+              variantsImages: newImages[0].url,
+            },
+          });
           revalidatePath('/dashboard/products');
           return { success: `Variant ${editVariant[0].id} has been updated` };
         }
@@ -47,6 +65,9 @@ export const createVariant = action
               productType,
             })
             .returning();
+          const product = await db.query.products.findFirst({
+            where: eq(products.id, productID),
+          });
           await db
             .insert(variantsTags)
             .values(tags.map(tag => ({ tag, variantID: newVariant[0].id })));
@@ -59,6 +80,21 @@ export const createVariant = action
               order: idx,
             })),
           );
+
+          if (product) {
+            await client.addOrUpdateObject({
+              indexName: 'products',
+              objectID: newVariant[0].id.toString(),
+              body: {
+                id: newVariant[0].productID,
+                title: product.title,
+                price: product.price,
+                productType: newVariant[0].productType,
+                variantsImages: newImages[0].url,
+              },
+            });
+          }
+
           revalidatePath('/dashboard/products');
           return { success: `Variant ${newVariant[0].id} has been created` };
         }
