@@ -163,6 +163,7 @@ export const ProductVariant = ({
             <div className='flex items-center justify-center gap-4'>
               {editMode && variant && (
                 <Button
+                  disabled={variantAction.status === 'executing'}
                   variant={'destructive'}
                   onClick={e => {
                     e.preventDefault();
@@ -173,7 +174,14 @@ export const ProductVariant = ({
                   Delete Variant
                 </Button>
               )}
-              <Button type='submit'>{editMode ? 'Update Variant' : 'Create Variant'}</Button>
+              <Button
+                disabled={
+                  status === 'executing' || !form.formState.isValid || !form.formState.isDirty
+                }
+                type='submit'
+              >
+                {editMode ? 'Update Variant' : 'Create Variant'}
+              </Button>
             </div>
           </form>
         </Form>
