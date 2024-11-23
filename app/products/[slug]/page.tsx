@@ -1,3 +1,4 @@
+import ProductPicks from '@/components/products/product-picks';
 import ProductType from '@/components/products/product-type';
 import { Separator } from '@/components/ui/separator';
 import formatPrice from '@/lib/format-price';
@@ -38,7 +39,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   if (variant) {
     return (
       <main>
-        <section>
+         <section>
           <div className='flex-1'>
             <h1>images</h1>
           </div>
@@ -54,9 +55,18 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </p>
           <div dangerouslySetInnerHTML={{__html: variant.product.description}}></div>
           <p className='text-secondary-foreground'>Available Variants</p>
-          <div>
-            {variant.product.productVariants.map(variant => (
-                <ProductPick />
+          <div className='flex gap-4 '>
+            {variant.product.productVariants.map(prodVariant => (
+                <ProductPicks
+                  key={prodVariant.id}
+                  id={prodVariant.id}
+                  color={prodVariant.color}
+                  productType={prodVariant.productType}
+                  title={variant.product.title}
+                  price={variant.product.price}
+                  productID={variant.productID}
+                  image={prodVariant.variantsImages[0].url}
+                />
             ))}
           </div>
         </section>
