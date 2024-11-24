@@ -56,7 +56,9 @@ const ActionCell = ({ row }: { row: Row<ProductColumn> }) => {
       <DropdownMenuContent>
         {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
         <DropdownMenuItem className='cursor-pointer focus:bg-primary/50 dark:focus:bg-muted'>
-          <Link href={`/dashboard/add-product?id=${product.id}`} />
+          <Link href={`/dashboard/add-product?id=${product.id}`}>
+            Edit Product
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -142,6 +144,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
     cell: ({ row }) => {
       const image = row.getValue('image') as string;
       const alt = row.getValue('title') as string;
+      console.log(image, alt);
       return (
         <div>
           <Image src={image} alt={alt} width={50} height={50} className='rounded-md' />
