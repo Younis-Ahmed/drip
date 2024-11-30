@@ -24,22 +24,22 @@ export type InferResultType<
 
 export type VariantsWithImagesTags = InferResultType<
   'productVariants',
-  { variantsImages: true; variantsTags: true,  }
->
+  { variantsImages: true; variantsTags: true }
+>;
 
 export type ProductsWithVariants = InferResultType<'products', { productVariants: true }>;
 
 export type VariantsWithProduct = InferResultType<
-  "productVariants",
+  'productVariants',
   { variantsImages: true; variantTags: true; product: true }
->
+>;
 
-// export type ReviewsWithUser = InferResultType<
-//   "reviews",
-//   {
-//     user: true
-//   }
-// >
+export type ReviewsWithUser = InferResultType<
+  'reviews',
+  {
+    user: true;
+  }
+>;
 
 // export type TotalOrders = InferResultType<
 //   "orderProduct",
