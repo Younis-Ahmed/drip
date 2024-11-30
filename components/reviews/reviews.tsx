@@ -14,9 +14,13 @@ export default async function Reviews({ productID }: { productID: number }) {
   return (
     <section className='py-8'>
       <h2 className='mb-4 text-2xl font-bold'>Product Reviews</h2>
-      <div>
-        <ReviewsForm />
-        <Review reviews={data} />
+      <div className='flex flex-col justify-stretch gap-2 lg:flex-row lg:gap-12'>
+        <div className='flex-1'>
+          <Review reviews={data} />
+        </div>
+        <div className='flex flex-1 flex-col gap-2'>
+          <ReviewsForm />
+        </div>
       </div>
     </section>
   );
