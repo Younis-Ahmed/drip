@@ -107,7 +107,11 @@ export const ProductVariant = ({
       productID,
       productType: 'black',
     },
+    
   });
+  console.log('status:', status);
+console.log('isValid:', form.formState.isValid);
+console.log('isDirty:', form.formState.isDirty);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
@@ -176,10 +180,13 @@ export const ProductVariant = ({
               )}
               <Button
                 disabled={
-                  status === 'executing' || !form.formState.isValid || !form.formState.isDirty
+                  status === 'executing' || 
+                  !form.formState.isValid || 
+                  !form.formState.isDirty // TODO: Fix this the button is always disabled
                 }
                 type='submit'
               >
+                
                 {editMode ? 'Update Variant' : 'Create Variant'}
               </Button>
             </div>
