@@ -96,6 +96,7 @@ export const ProductVariant = ({
     },
     onSettled() {
       toast.dismiss();
+      // form.reset();
     }
   });
 
@@ -110,17 +111,18 @@ export const ProductVariant = ({
     },
     onSettled() {
       toast.dismiss();
+      // form.reset();
     }
   });
 
   function onSubmit(val: z.infer<typeof VariantSchema>) {
     execute(val);
   }
-  console.log('productID:', productID);
-  console.log('variant:', variant);
-  console.log('editMode:', editMode);
+  // console.log('productID:', productID);
+  // console.log('variant:', variant);
+  // console.log('editMode:', editMode);
 
-  console.log('isValid:', form.formState.isValid);
+  // console.log('isValid:', form.formState.isValid);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
