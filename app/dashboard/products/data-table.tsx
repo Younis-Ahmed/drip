@@ -1,18 +1,22 @@
 'use client';
-import { Card, CardContent, CardHeader, CardDescription, CardTitle } from '@/components/ui/card';
 
 import {
   ColumnDef,
-  // ColumnFilter,
   ColumnFiltersState,
+  SortingState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -52,7 +56,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       <Card>
         <CardHeader>
           <CardTitle>Your Products</CardTitle>
-          <CardDescription> Update, delete and edit your products 💯</CardDescription>
+          <CardDescription>Update, delete and edit your products 💯</CardDescription>
         </CardHeader>
         <CardContent>
           <div>
@@ -60,7 +64,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               <Input
                 placeholder='Filter Products'
                 value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
-                onChange={e => table.getColumn('title')?.setFilterValue(e.target.value)}
+                onChange={event => table.getColumn('title')?.setFilterValue(event.target.value)}
               />
             </div>
             <Table>
@@ -99,22 +103,22 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                 )}
               </TableBody>
             </Table>
-            <div className='flex items-center justify-center gap-4 pt-4'>
+            <div className='flex items-center justify-end gap-4 pt-4'>
               <Button
                 disabled={!table.getCanPreviousPage()}
                 onClick={() => table.previousPage()}
-                variant={'outline'}
+                variant='outline'
               >
                 <ChevronLeftIcon className='h-4 w-4' />
-                <span>Go to Previous page</span>
+                <span>Previous Page</span>
               </Button>
               <Button
                 disabled={!table.getCanNextPage()}
                 onClick={() => table.nextPage()}
-                variant={'outline'}
+                variant='outline'
               >
+                <span>Next page</span>
                 <ChevronRightIcon className='h-4 w-4' />
-                <span>Go to Next page</span>
               </Button>
             </div>
           </div>
