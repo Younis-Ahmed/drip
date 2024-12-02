@@ -20,7 +20,10 @@ export const UserBtn = ({ user }: Session) => {
   const { setTheme, theme } = useTheme();
   const [checked, setChecked] = useState(false);
   const router = useRouter();
-
+  const handleNavigation = (path: string) => {
+    const fullPath = `${window.location.origin}/${path}`;
+    router.push(fullPath);
+  };
   // Maybe we can use this function to set the switch theme. Haven't decided yet.
   // const setSwitchTheme = () => {
   //   switch (theme) {
@@ -39,7 +42,7 @@ export const UserBtn = ({ user }: Session) => {
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger>
         <Avatar>
-          {user?.image && <Image src={user.image} alt={user.name || "User's avatar"} fill={true} />}
+          {user?.image && <Image src={user.image} alt={user.name || "User's avatar"} fill={true} sizes='' />}
           {!user?.image && (
             <AvatarFallback className='bg-primary/25'>
               <div className='font-blod'>{user?.name?.charAt(0)}</div>
@@ -63,7 +66,7 @@ export const UserBtn = ({ user }: Session) => {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem 
-        onClick={() => router.push('dashboard/orders')}
+        onClick={() => handleNavigation('dashboard/orders')}
         className='group cursor-pointer py-2 font-medium ease-in-out'>
           <TruckIcon
             size={14}
@@ -72,7 +75,7 @@ export const UserBtn = ({ user }: Session) => {
           My Order
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => router.push('dashboard/settings')}
+          onClick={() => handleNavigation('dashboard/settings')}
           className='group cursor-pointer py-2 font-medium ease-in-out'
         >
           <Settings
