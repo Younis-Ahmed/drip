@@ -83,15 +83,15 @@ export const columns: ColumnDef<ProductColumn>[] = [
     accessorKey: 'variants',
     header: 'Variants',
     cell: ({ row }) => {
-      const variants = row.getValue('variants') satisfies VariantsWithImagesTags[];
+      const variants = row.getValue('variants') as VariantsWithImagesTags[];
       return (
-        <div className='flex gap-2 text-xs font-medium'>
+        <div className='flex gap-2'>
           {variants.map(variant => (
             <div key={variant.id}>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <ProductVariant editMode={false} productID={row.original.id} variant={variant}>
+                    <ProductVariant editMode={true} productID={row.original.id} variant={variant}>
                       <div
                         className='h-5 w-5 rounded-full'
                         key={variant.id}
@@ -111,7 +111,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
               <TooltipTrigger asChild>
                 <span>
                   <ProductVariant editMode={false} productID={row.original.id}>
-                    <PlusCircle />
+                    <PlusCircle className='h-5 w-5'/>
                   </ProductVariant>
                 </span>
               </TooltipTrigger>
@@ -141,8 +141,9 @@ export const columns: ColumnDef<ProductColumn>[] = [
     header: 'Image',
     cell: ({ row }) => {
       const image = row.getValue('image') as string;
+      console.log('image:', image);
       const alt = row.getValue('title') as string;
-      console.log(image, alt);
+      console.log('alt', alt);
       return (
         <div>
           <Image src={image} alt={alt} width={50} height={50} className='rounded-md' />
