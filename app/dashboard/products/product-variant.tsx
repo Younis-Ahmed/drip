@@ -42,6 +42,19 @@ export const ProductVariant = ({
   variant?: VariantsWithImagesTags;
   children: React.ReactNode;
 }) => {
+  const form = useForm<z.infer<typeof VariantSchema>>({
+    // mode: 'onBlur',
+    resolver: zodResolver(VariantSchema),
+    defaultValues: {
+      tags: [],
+      variantImages: [],
+      color: '#000000',
+      editMode,
+      id: undefined,
+      productID,
+      productType: 'black',
+    },
+  });
   const [open, setOpen] = useState(false);
 
   const setEdit = () => {
@@ -68,51 +81,46 @@ export const ProductVariant = ({
 
   useEffect(() => {
     setEdit();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { execute, status } = useAction(createVariant, {
-    onExecute: () => {
-      toast.loading('Creating variant', { duration: 2000 });
+    onExecute() {
+      toast.loading('Creating variant');
       setOpen(false);
     },
     onSuccess({ data }) {
       if (data?.error) toast.error(data.error);
       if (data?.success) toast.success(data.success);
     },
+    onSettled() {
+      toast.dismiss();
+    }
   });
 
   const variantAction = useAction(deleteVariant, {
-    onExecute: () => {
-      toast.loading('Deleting variant', { duration: 2000 });
+    onExecute() {
+      toast.loading('Deleting variant');
       setOpen(false);
     },
     onSuccess({ data }) {
       if (data?.error) toast.error(data.error);
       if (data?.success) toast.success(data.success);
     },
+    onSettled() {
+      toast.dismiss();
+    }
   });
 
   function onSubmit(val: z.infer<typeof VariantSchema>) {
     execute(val);
   }
-  const form = useForm<z.infer<typeof VariantSchema>>({
-    resolver: zodResolver(VariantSchema),
-    defaultValues: {
-      tags: [],
-      variantImages: [],
-      color: '#000000',
-      editMode,
-      id: undefined,
-      productID,
-      productType: 'black',
-    },
-    
-  });
-  console.log('status:', status);
-console.log('isValid:', form.formState.isValid);
-console.log('isDirty:', form.formState.isDirty);
+  console.log('productID:', productID);
+  console.log('variant:', variant);
+  console.log('editMode:', editMode);
+
+  console.log('isValid:', form.formState.isValid);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
@@ -181,13 +189,10 @@ console.log('isDirty:', form.formState.isDirty);
               )}
               <Button
                 disabled={
-                  status === 'executing' || 
-                  !form.formState.isValid || 
-                  !form.formState.isDirty // TODO: Fix this the button is always disabled
+                  status === 'executing' || !form.formState.isValid || !form.formState.isDirty
                 }
                 type='submit'
               >
-                
                 {editMode ? 'Update Variant' : 'Create Variant'}
               </Button>
             </div>
