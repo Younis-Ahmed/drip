@@ -56,9 +56,7 @@ const ActionCell = ({ row }: { row: Row<ProductColumn> }) => {
       <DropdownMenuContent>
         {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
         <DropdownMenuItem className='cursor-pointer focus:bg-primary/50 dark:focus:bg-muted'>
-          <Link href={`/dashboard/add-product?id=${product.id}`}>
-            Edit Product
-          </Link>
+          <Link href={`/dashboard/add-product?id=${product.id}`}>Edit Product</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -112,7 +110,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
             <Tooltip>
               <TooltipTrigger asChild>
                 <span>
-                  <ProductVariant editMode={false}>
+                  <ProductVariant editMode={false} productID={row.original.id}>
                     <PlusCircle />
                   </ProductVariant>
                 </span>
