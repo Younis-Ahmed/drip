@@ -34,7 +34,7 @@ export default function VariantImages() {
         name='variantImages'
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Variant Tags</FormLabel>
+            <FormLabel>Variant Images</FormLabel>
             <FormControl>
               <UploadDropzone
                 config={{ mode: 'auto' }}
@@ -74,6 +74,7 @@ export default function VariantImages() {
                   });
                   return;
                 }}
+                
               />
             </FormControl>
             <FormMessage />

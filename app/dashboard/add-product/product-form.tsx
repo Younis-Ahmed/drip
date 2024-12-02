@@ -79,12 +79,14 @@ function ProductForm() {
         toast.success(data.success);
       }
     },
-    // onError: () => {
-    //   console.error('Product creation failed');
-    // },
     onExecute: () => {
       toast.loading(editMode ? 'Updating Product' : 'Creating Product');
     },
+    onSettled: () => {
+      toast.dismiss();
+      form.reset();
+    }
+
   });
 
   async function onSubmit(data: zProductSchema) {
