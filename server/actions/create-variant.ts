@@ -11,7 +11,7 @@ const action = createSafeActionClient();
 
 const client = algoliasearch(
   process.env.ALGOLIA_APP_ID as string,
-  process.env.ALGOLIA_SECRET_KEY as string,
+  process.env.ALGOLIA_WRITE_KEY as string,
 );
 
 // const algoliaIndex = await client.searchSingleIndex({
@@ -57,6 +57,12 @@ export const createVariant = action
           return { success: `Variant ${editVariant[0].id} has been updated` };
         }
         if (!editMode) {
+          const product = await db.query.products.findFirst({
+            where: eq(products.id, productID),
+          });
+          if (!product) {
+            return { error: `Product with ID ${productID} does not exist` };
+          }
           const newVariant = await db
             .insert(productVariants)
             .values({
@@ -65,9 +71,6 @@ export const createVariant = action
               productType,
             })
             .returning();
-          const product = await db.query.products.findFirst({
-            where: eq(products.id, productID),
-          });
           await db
             .insert(variantsTags)
             .values(tags.map(tag => ({ tag, variantID: newVariant[0].id })));
