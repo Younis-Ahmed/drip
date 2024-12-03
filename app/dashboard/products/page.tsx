@@ -18,7 +18,7 @@ async function Products() {
       id: product.id,
       title: product.title,
       price: product.price,
-      variants: [],
+      variants: product.productVariants,
       image: Placeholder.src,
     };
   });

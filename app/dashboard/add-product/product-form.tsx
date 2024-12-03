@@ -67,6 +67,7 @@ function ProductForm() {
     if (editMode) {
       checkProduct(parseInt(editMode));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { execute, status } = useAction(createProduct, {

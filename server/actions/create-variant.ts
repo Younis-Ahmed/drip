@@ -24,7 +24,7 @@ export const createVariant = action
       parsedInput: { color, productID, productType, tags, variantImages: newImages, editMode, id },
     }) => {
       try {
-        if (editMode) {
+        if (editMode && id) {
           const editVariant = await db
             .update(productVariants)
             .set({ color, productType, updated: new Date() })
@@ -99,7 +99,7 @@ export const createVariant = action
           }
 
           revalidatePath('/dashboard/products');
-          return { success: `Variant ${newVariant[0].id} has been created` };
+          return { success: `Variant ${product.title} has been created` };
         }
       } catch (error) {
         console.error(`Error from create-variant.ts: ${error}`);
