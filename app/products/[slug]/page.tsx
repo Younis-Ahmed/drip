@@ -19,12 +19,11 @@ export async function generateStaticParams() {
     },
     orderBy: (productVariants, { desc }) => [desc(productVariants.id)],
   });
-  if (!data) {
-    return [];
+  if (data) {
+    const slugID = data.map(variant => ({ slug: variant.id.toString() }));
+    return slugID;
   }
-
-  const slugID = data.map(variant => ({ slug: variant.id.toString() }));
-  return slugID;
+  return [];
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {
@@ -55,24 +54,24 @@ export default async function Page({ params }: { params: { slug: string } }) {
               <ProductType variants={variant.product.productVariants} />
               <Stars rating={reviewAvg} totalReviews={variant.product.reviews.length} />
             </div>
-          </div>
-          <Separator className='my-2' />
-          <p className='py-2 text-2xl font-medium'>{formatPrice(variant.product.price)}</p>
-          <div dangerouslySetInnerHTML={{ __html: variant.product.description }}></div>
-          <p className='my-2 font-medium text-secondary-foreground'>Available Variants</p>
-          <div className='flex gap-4'>
-            {variant.product.productVariants.map(prodVariant => (
-              <ProductPicks
-                key={prodVariant.id}
-                id={prodVariant.id}
-                color={prodVariant.color}
-                productType={prodVariant.productType}
-                title={variant.product.title}
-                price={variant.product.price}
-                productID={variant.productID}
-                image={prodVariant.variantsImages[0].url}
-              />
-            ))}
+            <Separator className='my-2' />
+            <p className='py-2 text-2xl font-medium'>{formatPrice(variant.product.price)}</p>
+            <div dangerouslySetInnerHTML={{ __html: variant.product.description }}></div>
+            <p className='my-2 font-medium text-secondary-foreground'>Available Variants</p>
+            <div className='flex gap-4'>
+              {variant.product.productVariants.map(prodVariant => (
+                <ProductPicks
+                  key={prodVariant.id}
+                  id={prodVariant.id}
+                  color={prodVariant.color}
+                  productType={prodVariant.productType}
+                  title={variant.product.title}
+                  price={variant.product.price}
+                  productID={variant.productID}
+                  image={prodVariant.variantsImages[0].url}
+                />
+              ))}
+            </div>
           </div>
         </section>
         <Reviews productID={variant.productID} />
