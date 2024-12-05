@@ -36,7 +36,7 @@ export default function ReviewsForm() {
     defaultValues: {
       rating: 0,
       comment: '',
-      title: '',
+      // title: '',
       productID,
     },
   });
@@ -59,7 +59,7 @@ export default function ReviewsForm() {
       productID,
       rating: data.rating,
       comment: data.comment,
-      title: data.title,
+      // title: data.title,
     });
   }
 
