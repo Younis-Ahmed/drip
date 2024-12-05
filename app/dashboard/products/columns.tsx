@@ -141,9 +141,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
     header: 'Image',
     cell: ({ row }) => {
       const image = row.getValue('image') as string;
-      console.log('image:', image);
       const alt = row.getValue('title') as string;
-      console.log('alt', alt);
       return (
         <div>
           <Image src={image} alt={alt} width={50} height={50} className='rounded-md' />
