@@ -150,7 +150,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
         </div>
       );
     },
-  },
+  }, 
   {
     accessorKey: 'actions',
     header: 'Actions',
