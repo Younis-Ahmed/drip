@@ -1,5 +1,5 @@
-import type { Config } from 'tailwindcss';
-import { withUt } from 'uploadthing/tw';
+import type { Config } from 'tailwindcss'
+import { withUt } from 'uploadthing/tw'
 
 const config: Config = withUt({
   darkMode: ['class'],
@@ -45,11 +45,11 @@ const config: Config = withUt({
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         chart: {
-          '1': 'hsl(var(--chart-1))',
-          '2': 'hsl(var(--chart-2))',
-          '3': 'hsl(var(--chart-3))',
-          '4': 'hsl(var(--chart-4))',
-          '5': 'hsl(var(--chart-5))',
+          1: 'hsl(var(--chart-1))',
+          2: 'hsl(var(--chart-2))',
+          3: 'hsl(var(--chart-3))',
+          4: 'hsl(var(--chart-4))',
+          5: 'hsl(var(--chart-5))',
         },
       },
       borderRadius: {
@@ -61,5 +61,5 @@ const config: Config = withUt({
   },
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require('tailwindcss-animate')],
-}) satisfies Config;
-export default config;
+}) satisfies Config
+export default config
