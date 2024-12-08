@@ -1,9 +1,10 @@
-import { defineConfig } from 'drizzle-kit';
-import * as dotenv from 'dotenv';
+import process from 'node:process'
+import * as dotenv from 'dotenv'
+import { defineConfig } from 'drizzle-kit'
 
 dotenv.config({
   path: '.env.local',
-});
+})
 
 export default defineConfig({
   schema: './server/schema.ts',
@@ -16,4 +17,4 @@ export default defineConfig({
     password: process.env.DB_PASSWORD!,
     database: process.env.DB_NAME!,
   },
-});
+})
