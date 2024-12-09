@@ -5,7 +5,7 @@ export default {
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
-    'prettier'
+    'prettier',
   ],
   plugins: ['react', '@typescript-eslint'],
   parserOptions: {
@@ -15,4 +15,4 @@ export default {
   rules: {
     // Add your custom ESLint rules here
   },
-};
+}
