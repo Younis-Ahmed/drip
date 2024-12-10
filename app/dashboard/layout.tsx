@@ -1,9 +1,9 @@
-import { auth } from '@/server/auth';
-import { BarChart, Package, PenSquare, Settings, Truck } from 'lucide-react';
-import DashboardNav from '@/components/navigation/dashboard-nav';
+import DashboardNav from '@/components/navigation/dashboard-nav'
+import { auth } from '@/server/auth'
+import { BarChart, Package, PenSquare, Settings, Truck } from 'lucide-react'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth();
+  const session = await auth()
 
   const userLinks = [
     {
@@ -16,10 +16,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
       path: '/dashboard/settings',
       icon: <Settings size={16} />,
     },
-  ] as const;
+  ] as const
 
-  const adminLinks =
-    session?.user.role === 'ADMIN'
+  const adminLinks
+    = session?.user.role === 'ADMIN'
       ? ([
           {
             label: 'Analytics',
@@ -37,13 +37,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
             icon: <Package size={16} />,
           },
         ] as const)
-      : [];
+      : []
 
-  const allLinks = [...userLinks, ...adminLinks];
+  const allLinks = [...userLinks, ...adminLinks]
   return (
     <div>
       <DashboardNav allLinks={allLinks} />
       {children}
     </div>
-  );
+  )
 }

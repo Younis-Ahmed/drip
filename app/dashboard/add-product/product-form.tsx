@@ -1,13 +1,14 @@
-'use client';
+'use client'
+import type { zProductSchema } from '@/types/product-schema'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
-  CardHeader,
   // CardFooter,
   CardDescription,
+  CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/card'
 import {
   Form,
   FormControl,
@@ -15,20 +16,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { useForm } from 'react-hook-form';
-import { ProductSchema, zProductSchema } from '@/types/product-schema';
-import { DollarSign } from 'lucide-react';
-import Tiptap from './tiptap';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useAction } from 'next-safe-action/hooks';
-import { createProduct } from '@/server/actions/create-product';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { toast } from 'sonner';
-import { getProduct } from '@/server/actions/get-product';
-import { revalidatePath } from 'next/cache';
-import { useEffect } from 'react';
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { createProduct } from '@/server/actions/create-product'
+import { getProduct } from '@/server/actions/get-product'
+import { ProductSchema } from '@/types/product-schema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { DollarSign } from 'lucide-react'
+import { useAction } from 'next-safe-action/hooks'
+import { revalidatePath } from 'next/cache'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import Tiptap from './tiptap'
 
 function ProductForm() {
   const form = useForm<zProductSchema>({
@@ -39,59 +40,58 @@ function ProductForm() {
       description: '',
     },
     mode: 'onChange',
-  });
+  })
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const editMode = searchParams.get('id');
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const editMode = searchParams.get('id')
 
   const checkProduct = async (id: number) => {
     if (editMode) {
-      const { success, error } = await getProduct(id);
+      const { success, error } = await getProduct(id)
       if (error) {
-        toast.error(error);
-        revalidatePath('/dashboard/products');
-        return;
+        toast.error(error)
+        revalidatePath('/dashboard/products')
+        return
       }
       if (success) {
-        const id = parseInt(editMode);
-        form.setValue('title', success.title);
-        form.setValue('description', success.description);
-        form.setValue('price', success.price);
-        form.setValue('id', id);
+        const id = Number.parseInt(editMode)
+        form.setValue('title', success.title)
+        form.setValue('description', success.description)
+        form.setValue('price', success.price)
+        form.setValue('id', id)
       }
     }
-  };
+  }
 
   useEffect(() => {
     if (editMode) {
-      checkProduct(parseInt(editMode));
+      checkProduct(Number.parseInt(editMode))
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   const { execute, status } = useAction(createProduct, {
     onSuccess: ({ data }) => {
       if (data?.error) {
-        toast.error(data.error);
+        toast.error(data.error)
       }
       if (data?.success) {
-        router.push('/dashboard/products');
-        toast.success(data.success);
+        router.push('/dashboard/products')
+        toast.success(data.success)
       }
     },
     onExecute: () => {
-      toast.loading(editMode ? 'Updating Product' : 'Creating Product');
+      toast.loading(editMode ? 'Updating Product' : 'Creating Product')
     },
     onSettled: () => {
-      toast.dismiss();
-      form.reset();
-    }
+      toast.dismiss()
+      form.reset()
+    },
 
-  });
+  })
 
   async function onSubmit(data: zProductSchema) {
-    execute(data);
+    execute(data)
   }
 
   return (
@@ -104,15 +104,15 @@ function ProductForm() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name='title'
+              name="title"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Product Title</FormLabel>
                   <FormControl>
-                    <Input placeholder='Your Title' {...field} />
+                    <Input placeholder="Your Title" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -120,7 +120,7 @@ function ProductForm() {
             />
             <FormField
               control={form.control}
-              name='description'
+              name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
@@ -133,16 +133,16 @@ function ProductForm() {
             />
             <FormField
               control={form.control}
-              name='price'
+              name="price"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Product Price</FormLabel>
                   <FormControl>
-                    <div className='flex items-center gap-2'>
-                      <DollarSign size={36} className='rounded-md bg-muted p-2' />
+                    <div className="flex items-center gap-2">
+                      <DollarSign size={36} className="rounded-md bg-muted p-2" />
                       <Input
-                        type='number'
-                        placeholder='Your price in USD'
+                        type="number"
+                        placeholder="Your price in USD"
                         step={0.1}
                         min={0}
                         {...field}
@@ -158,7 +158,7 @@ function ProductForm() {
                 status === 'executing' || !form.formState.isValid || !form.formState.isDirty
               }
               // className='w-full'
-              type='submit'
+              type="submit"
             >
               {editMode ? 'Update Product' : 'Create Product'}
             </Button>
@@ -166,7 +166,7 @@ function ProductForm() {
         </Form>
       </CardContent>
     </Card>
-  );
+  )
 }
 
-export default ProductForm;
+export default ProductForm

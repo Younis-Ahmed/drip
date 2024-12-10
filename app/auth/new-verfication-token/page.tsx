@@ -1,5 +1,5 @@
-import { EmailVerificationForm } from '@/components/auth/email-verfiication-form';
+import { EmailVerificationForm } from '@/components/auth/email-verfiication-form'
 
-const EmailVerification = () => <EmailVerificationForm />;
+const EmailVerification = () => <EmailVerificationForm />
 
-export default EmailVerification;
+export default EmailVerification
