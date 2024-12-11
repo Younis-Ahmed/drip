@@ -5,5 +5,6 @@ export default antfu({
     'no-console': 'off',
   },
   ignores: ['dist', 'node_modules', 'tailwind.config.ts'],
-  extends: [],
+  extends: ['next/core-web-vitals', 'next/typescript'],
+
 })
