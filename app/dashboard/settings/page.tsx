@@ -1,14 +1,14 @@
-import { auth } from '@/server/auth';
-import { redirect } from 'next/navigation';
-import SettingsCard from './settings-card';
+import { auth } from '@/server/auth'
+import { redirect } from 'next/navigation'
+import SettingsCard from './settings-card'
 
 export default async function Settings() {
-  const session = await auth();
+  const session = await auth()
 
   if (!session) {
-    redirect('/');
+    redirect('/')
   }
   if (session) {
-    return <SettingsCard session={session}/>;
+    return <SettingsCard session={session} />
   }
 }
