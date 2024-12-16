@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { cn } from '@/lib/utils'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function ProductPicks({
   id,
@@ -12,17 +12,17 @@ export default function ProductPicks({
   productID,
   image,
 }: {
-  id: number;
-  color: string;
-  productType: string;
-  title: string;
-  price: number;
-  productID: number;
-  image: string;
+  id: number
+  color: string
+  productType: string
+  title: string
+  price: number
+  productID: number
+  image: string
 }) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const selectedColor = searchParams.get('type') || productType;
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const selectedColor = searchParams.get('type') || productType
 
   return (
     <div
@@ -35,8 +35,8 @@ export default function ProductPicks({
         router.push(
           `/products/${id}?id=${id}&productID=${productID}&price=${price}&title=${title}&type=${productType}&image=${image}`,
           { scroll: false },
-        )
-      }
-    ></div>
-  );
+        )}
+    >
+    </div>
+  )
 }

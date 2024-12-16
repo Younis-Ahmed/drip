@@ -1,76 +1,78 @@
-'use client';
+'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormMessage,
-} from '../ui/form';
-import { AuthCard } from './auth-card';
-import { useForm } from 'react-hook-form';
-import { loginSchema } from '@/types/login-schema';
-import { z } from 'zod';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import Link from 'next/link';
-import { useAction } from 'next-safe-action/hooks';
-import { emailSignIn } from '@/server/actions/email-signin';
-import { cn } from '@/lib/utils';
-import { useState } from 'react';
-import { FormSuccess } from './form-success';
-import { FormError } from './form-error';
+import type { z } from 'zod'
 import {
   InputOTP,
   InputOTPGroup,
   // InputOTPSeparator,
   InputOTPSlot,
-} from '@/components/ui/input-otp';
+} from '@/components/ui/input-otp'
+import { cn } from '@/lib/utils'
+import { emailSignIn } from '@/server/actions/email-signin'
+import { loginSchema } from '@/types/login-schema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useAction } from 'next-safe-action/hooks'
+import Link from 'next/link'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { Button } from '../ui/button'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '../ui/form'
+import { Input } from '../ui/input'
+import { AuthCard } from './auth-card'
+import { FormError } from './form-error'
+import { FormSuccess } from './form-success'
 
-export const LoginForm = () => {
+export function LoginForm() {
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: '',
     },
-  });
+  })
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [showTwoFactor, setShowTwoFactor] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
+  const [showTwoFactor, setShowTwoFactor] = useState<boolean>(false)
 
   const { execute, status } = useAction(emailSignIn, {
     onSuccess({ data }) {
-      if (data?.error) setError(data.error);
-      if (data?.success) setSuccess(data.success);
-      if (data?.twoFactor) setShowTwoFactor(true);
+      if (data?.error)
+        setError(data.error)
+      if (data?.success)
+        setSuccess(data.success)
+      if (data?.twoFactor)
+        setShowTwoFactor(true)
     },
-  });
+  })
 
   const onSubmit = (values: z.infer<typeof loginSchema>) => {
-    execute(values);
-  };
+    execute(values)
+  }
 
   return (
     <AuthCard
-      cardTitle='Welcome back!'
-      backBtnHref='/auth/register'
+      cardTitle="Welcome back!"
+      backBtnHref="/auth/register"
       backBtnLabel="Don't have an account? Sign up"
       showSocials={true}
     >
       <div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} action=''>
+          <form onSubmit={form.handleSubmit(onSubmit)} action="">
             <div>
               {showTwoFactor && (
                 <FormField
                   control={form.control}
-                  name='code'
+                  name="code"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>We&apos;ve sent you a two factor code to your email.</FormLabel>
@@ -96,16 +98,16 @@ export const LoginForm = () => {
                 <>
                   <FormField
                     control={form.control}
-                    name='email'
+                    name="email"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder='younis@gmail.com'
-                            type='email'
-                            autoComplete='email'
+                            placeholder="younis@gmail.com"
+                            type="email"
+                            autoComplete="email"
                           />
                         </FormControl>
                         <FormDescription />
@@ -115,16 +117,16 @@ export const LoginForm = () => {
                   />
                   <FormField
                     control={form.control}
-                    name='password'
+                    name="password"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder='********'
-                            type='password'
-                            autoComplete='current-password'
+                            placeholder="********"
+                            type="password"
+                            autoComplete="current-password"
                           />
                         </FormControl>
                         <FormDescription />
@@ -136,12 +138,12 @@ export const LoginForm = () => {
               )}
               <FormSuccess message={success ?? undefined} />
               <FormError message={error ?? undefined} />
-              <Button className='my-3 px-0' size={'sm'} variant={'link'} asChild>
-                <Link href='/auth/reset'>Forgot your password</Link>
+              <Button className="my-3 px-0" size="sm" variant="link" asChild>
+                <Link href="/auth/reset">Forgot your password</Link>
               </Button>
             </div>
             <Button
-              type='submit'
+              type="submit"
               className={cn('w-full py-2', status === 'executing' ? 'animate-pulse' : '')}
             >
               {showTwoFactor ? 'Verify' : 'Sign in'}
@@ -150,5 +152,5 @@ export const LoginForm = () => {
         </Form>
       </div>
     </AuthCard>
-  );
-};
+  )
+}

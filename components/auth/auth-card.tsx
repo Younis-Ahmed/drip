@@ -1,24 +1,24 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import Socials from './socials';
-import BackButton from './back-button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import BackButton from './back-button'
+import Socials from './socials'
 
-type CardWrapperProps = {
-  children: React.ReactNode;
-  cardTitle: string;
-  backBtnHref: string;
-  backBtnLabel: string;
-  showSocials?: boolean;
-};
+interface CardWrapperProps {
+  children: React.ReactNode
+  cardTitle: string
+  backBtnHref: string
+  backBtnLabel: string
+  showSocials?: boolean
+}
 
-export const AuthCard = ({
+export function AuthCard({
   children,
   cardTitle,
   backBtnHref,
   backBtnLabel,
   showSocials,
-}: CardWrapperProps) => {
+}: CardWrapperProps) {
   return (
-    <Card className='dark:border-white/60'>
+    <Card className="dark:border-white/60">
       <CardHeader>
         <CardTitle>{cardTitle}</CardTitle>
       </CardHeader>
@@ -32,5 +32,5 @@ export const AuthCard = ({
         <BackButton label={backBtnLabel} href={backBtnHref} />
       </CardFooter>
     </Card>
-  );
-};
+  )
+}
