@@ -4,6 +4,7 @@ import { useCartStore } from '@/lib/client-store'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ShoppingBag } from 'lucide-react'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTrigger } from '../ui/drawer'
+import CartItems from './cart-items'
 
 export default function CartDrawer() {
   const { cart } = useCartStore()
@@ -31,6 +32,7 @@ export default function CartDrawer() {
         <DrawerHeader>
           <h2 className="text-xl font-bold">Cart</h2>
         </DrawerHeader>
+        <CartItems />
       </DrawerContent>
     </Drawer>
   )
