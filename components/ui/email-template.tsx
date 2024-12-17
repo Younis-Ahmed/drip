@@ -1,7 +1,7 @@
 interface EmailTemplateProps {
-  confirmLink: string;
-  title: string;
-  linkContent: string;
+  confirmLink: string
+  title: string
+  linkContent: string
 }
 
 export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({ confirmLink, title, linkContent }) => (
@@ -11,4 +11,4 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({ confirmL
     </p>
     <a href={confirmLink}>{linkContent}</a>
   </div>
-);
+)
