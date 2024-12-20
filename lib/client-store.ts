@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 export interface Variant {
   variantID: number
@@ -19,7 +20,7 @@ export interface CartState {
   removeFromCart: (item: CartItem) => void
 }
 
-export const useCartStore = create<CartState>(set => ({
+export const useCartStore = create<CartState>()(persist(set => ({
   cart: [],
   addToCart: item => set((state) => {
     const existingItem = state.cart.find(cartItem => cartItem.variant.variantID === item.variant.variantID)
@@ -48,20 +49,21 @@ export const useCartStore = create<CartState>(set => ({
     }
   }),
   removeFromCart: item => set((state) => {
-      const updatedCart = state.cart.map((cartItem) => {
-        if (cartItem.variant.variantID === item.variant.variantID) {
-          return {
-            ...cartItem,
-            variant: {
-              ...cartItem.variant,
-              quantity: cartItem.variant.quantity - 1,
-            },
-          }
+    const updatedCart = state.cart.map((cartItem) => {
+      if (cartItem.variant.variantID === item.variant.variantID) {
+        return {
+          ...cartItem,
+          variant: {
+            ...cartItem.variant,
+            quantity: cartItem.variant.quantity - 1,
+          },
         }
-        return cartItem
-      })
-      return{
-        cart: updatedCart.filter(item => item.variant.quantity > 0)
       }
+      return cartItem
     })
-}))
+    return {
+      cart: updatedCart.filter(item => item.variant.quantity > 0),
+    }
+  }),
+}), { name: 'cart-storage' }),
+)
