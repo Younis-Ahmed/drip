@@ -1,3 +1,4 @@
+import AddCart from '@/components/cart/add-cart'
 import ProductPicks from '@/components/products/product-picks'
 import ProductType from '@/components/products/product-type'
 import ProductCarousal from '@/components/products/products-carousal'
@@ -72,6 +73,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
                 />
               ))}
             </div>
+            <AddCart />
           </div>
         </section>
         <Reviews productID={variant.productID} />

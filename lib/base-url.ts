@@ -1,8 +1,11 @@
-export default function getBaseURL() {
-    if (typeof window !== 'undefined') return "";
+import process from 'node:process'
 
-    if (process.env.VERCEL_URL) {
-        return `https://${process.env.DOMAIN_URL}`;
-    }
-    return "http://localhost:3000";
+export default function getBaseURL() {
+  if (typeof window !== 'undefined')
+    return ''
+
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.DOMAIN_URL}`
+  }
+  return 'http://localhost:3000'
 }
