@@ -43,7 +43,7 @@ export default function RootLayout({
           enableSystem={true}
           storageKey="theme"
         >
-          <div className="mx-auto max-w-7xl px-6 antialiased md:px-12">
+          <div className="mx-auto max-w-8xl px-6 antialiased md:px-12">
             <Nav />
             <Toaster />
             {children}
