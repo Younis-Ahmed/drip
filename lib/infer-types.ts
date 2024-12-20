@@ -1,15 +1,15 @@
-import type { BuildQueryResult, DBQueryConfig, ExtractTablesWithRelations } from 'drizzle-orm';
-import * as schema from '@/server/schema';
+import type * as schema from '@/server/schema'
+import type { BuildQueryResult, DBQueryConfig, ExtractTablesWithRelations } from 'drizzle-orm'
 
-type Schema = typeof schema;
-type TSchema = ExtractTablesWithRelations<Schema>;
+type Schema = typeof schema
+type TSchema = ExtractTablesWithRelations<Schema>
 
 export type IncludeRelation<TableName extends keyof TSchema> = DBQueryConfig<
   'one' | 'many',
   boolean,
   TSchema,
   TSchema[TableName]
->['with'];
+>['with']
 
 export type InferResultType<
   TableName extends keyof TSchema,
@@ -18,28 +18,28 @@ export type InferResultType<
   TSchema,
   TSchema[TableName],
   {
-    with: With;
+    with: With
   }
->;
+>
 
 export type VariantsWithImagesTags = InferResultType<
   'productVariants',
-  { variantsImages: true; variantsTags: true }
->;
+  { variantsImages: true, variantsTags: true }
+>
 
-export type ProductsWithVariants = InferResultType<'products', { productVariants: true }>;
+export type ProductsWithVariants = InferResultType<'products', { productVariants: true }>
 
 export type VariantsWithProduct = InferResultType<
   'productVariants',
-  { variantsImages: true; variantTags: true; product: true }
->;
+  { variantsImages: true, variantTags: true, product: true }
+>
 
 export type ReviewsWithUser = InferResultType<
   'reviews',
   {
-    user: true;
+    user: true
   }
->;
+>
 
 // export type TotalOrders = InferResultType<
 //   "orderProduct",
