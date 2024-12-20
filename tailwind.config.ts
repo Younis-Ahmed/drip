@@ -10,6 +10,12 @@ const config: Config = withUt({
   ],
   theme: {
     extend: {
+      maxWidth: {
+        '8xl': '88rem',
+      },
+      minHeight: {
+        '50vh': '50vh',
+      },
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',

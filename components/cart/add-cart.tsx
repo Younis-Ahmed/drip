@@ -53,7 +53,7 @@ export default function AddCart() {
             variantID: id,
             quantity,
           },
-          name: title + type,
+          name: `${title} ${type}`,
           image,
           price,
         })
