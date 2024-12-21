@@ -1,12 +1,12 @@
-'use server';
-import { ProductSchema } from '@/types/product-schema';
-import { createSafeActionClient } from 'next-safe-action';
-import { db } from '..';
-import { eq } from 'drizzle-orm';
-import { products } from '../schema';
-import { revalidatePath } from 'next/cache';
+'use server'
+import { ProductSchema } from '@/types/product-schema'
+import { eq } from 'drizzle-orm'
+import { createSafeActionClient } from 'next-safe-action'
+import { revalidatePath } from 'next/cache'
+import { db } from '..'
+import { products } from '../schema'
 
-const action = createSafeActionClient();
+const action = createSafeActionClient()
 
 export const createProduct = action
   .schema(ProductSchema)
@@ -16,9 +16,9 @@ export const createProduct = action
       if (id) {
         const currentProduct = await db.query.products.findFirst({
           where: eq(products.id, id),
-        });
+        })
         if (!currentProduct) {
-          return { error: 'Product not found' };
+          return { error: 'Product not found' }
         }
         const editedProduct = await db
           .update(products)
@@ -28,9 +28,9 @@ export const createProduct = action
             title,
           })
           .where(eq(products.id, id))
-          .returning();
-        revalidatePath('/dashboard/products');
-        return { success: `Product ${editedProduct[0].title} has been updated` };
+          .returning()
+        revalidatePath('/dashboard/products')
+        return { success: `Product ${editedProduct[0].title} has been updated` }
       }
       if (!id) {
         const newProduct = await db
@@ -40,11 +40,12 @@ export const createProduct = action
             price,
             title,
           })
-          .returning();
-        revalidatePath('/dashboard/products');
-        return { success: `Product ${newProduct[0].title} has been created` };
+          .returning()
+        revalidatePath('/dashboard/products')
+        return { success: `Product ${newProduct[0].title} has been created` }
       }
-    } catch (error) {
-      return { error: `Error from create-product.ts: ${error}` };
     }
-  });
+    catch (error) {
+      return { error: `Error from create-product.ts: ${error}` }
+    }
+  })
