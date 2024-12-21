@@ -14,14 +14,20 @@ export interface CartItem {
   price: number
 }
 
+export type CartProgress = 'cart-page' | 'payment-page' | 'confirmation-page'
+
 export interface CartState {
   cart: CartItem[]
+  checkoutProgress: CartProgress
+  setCheckoutProgress: (val: CartProgress) => void
   addToCart: (item: CartItem) => void
   removeFromCart: (item: CartItem) => void
 }
 
 export const useCartStore = create<CartState>()(persist(set => ({
   cart: [],
+  checkoutProgress: 'cart-page',
+  setCheckoutProgress: val => set(() => ({ checkoutProgress: val })),
   addToCart: item => set((state) => {
     const existingItem = state.cart.find(cartItem => cartItem.variant.variantID === item.variant.variantID)
 
