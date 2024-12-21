@@ -1,18 +1,20 @@
-'use server';
+'use server'
 
-import { VariantSchema } from '@/types/variant-schema';
-import { createSafeActionClient } from 'next-safe-action';
-import { db } from '..';
-import { products, productVariants, variantsImages, variantsTags } from '../schema';
-import { eq } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
-import { algoliasearch } from 'algoliasearch';
-const action = createSafeActionClient();
+import process from 'node:process'
+import { VariantSchema } from '@/types/variant-schema'
+import { algoliasearch } from 'algoliasearch'
+import { eq } from 'drizzle-orm'
+import { createSafeActionClient } from 'next-safe-action'
+import { revalidatePath } from 'next/cache'
+import { db } from '..'
+import { products, productVariants, variantsImages, variantsTags } from '../schema'
+
+const action = createSafeActionClient()
 
 const client = algoliasearch(
   process.env.ALGOLIA_APP_ID as string,
   process.env.ALGOLIA_WRITE_KEY as string,
-);
+)
 
 // const algoliaIndex = await client.searchSingleIndex({
 //   indexName: 'products',
@@ -29,12 +31,12 @@ export const createVariant = action
             .update(productVariants)
             .set({ color, productType, updated: new Date() })
             .where(eq(productVariants.id, id as number))
-            .returning();
-          await db.delete(variantsTags).where(eq(variantsTags.variantID, editVariant[0].id));
+            .returning()
+          await db.delete(variantsTags).where(eq(variantsTags.variantID, editVariant[0].id))
           await db
             .insert(variantsTags)
-            .values(tags.map(tag => ({ tag, variantID: editVariant[0].id })));
-          await db.delete(variantsImages).where(eq(variantsImages.variantID, editVariant[0].id));
+            .values(tags.map(tag => ({ tag, variantID: editVariant[0].id })))
+          await db.delete(variantsImages).where(eq(variantsImages.variantID, editVariant[0].id))
           await db.insert(variantsImages).values(
             newImages.map((img, idx) => ({
               name: img.name as string,
@@ -43,7 +45,7 @@ export const createVariant = action
               variantID: editVariant[0].id,
               order: idx,
             })),
-          );
+          )
           await client.addOrUpdateObject({
             indexName: 'products',
             objectID: editVariant[0].id.toString(),
@@ -52,16 +54,16 @@ export const createVariant = action
               productType: editVariant[0].productType,
               variantsImages: newImages[0].url,
             },
-          });
-          revalidatePath('/dashboard/products');
-          return { success: `Variant ${editVariant[0].id} has been updated` };
+          })
+          revalidatePath('/dashboard/products')
+          return { success: `Variant ${editVariant[0].id} has been updated` }
         }
         if (!editMode) {
           const product = await db.query.products.findFirst({
             where: eq(products.id, productID),
-          });
+          })
           if (!product) {
-            return { error: `Product with ID ${productID} does not exist` };
+            return { error: `Product with ID ${productID} does not exist` }
           }
           const newVariant = await db
             .insert(productVariants)
@@ -70,10 +72,10 @@ export const createVariant = action
               productID,
               productType,
             })
-            .returning();
+            .returning()
           await db
             .insert(variantsTags)
-            .values(tags.map(tag => ({ tag, variantID: newVariant[0].id })));
+            .values(tags.map(tag => ({ tag, variantID: newVariant[0].id })))
           await db.insert(variantsImages).values(
             newImages.map((img, idx) => ({
               name: img.name as string,
@@ -82,7 +84,7 @@ export const createVariant = action
               variantID: newVariant[0].id,
               order: idx,
             })),
-          );
+          )
 
           if (product) {
             await client.addOrUpdateObject({
@@ -95,15 +97,16 @@ export const createVariant = action
                 productType: newVariant[0].productType,
                 variantsImages: newImages[0].url,
               },
-            });
+            })
           }
 
-          revalidatePath('/dashboard/products');
-          return { success: `Variant ${product.title} has been created` };
+          revalidatePath('/dashboard/products')
+          return { success: `Variant ${product.title} has been created` }
         }
-      } catch (error) {
-        console.error(`Error from create-variant.ts: ${error}`);
-        return { error: 'An error occurred while creating the variant. Please try again later.' };
+      }
+      catch (error) {
+        console.error(`Error from create-variant.ts: ${error}`)
+        return { error: 'An error occurred while creating the variant. Please try again later.' }
       }
     },
-  );
+  )
