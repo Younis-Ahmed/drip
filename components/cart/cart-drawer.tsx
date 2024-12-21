@@ -5,9 +5,10 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ShoppingBag } from 'lucide-react'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTrigger } from '../ui/drawer'
 import CartItems from './cart-items'
+import CartMessage from './cart-message'
 
 export default function CartDrawer() {
-  const { cart } = useCartStore()
+  const { cart, checkoutProgress } = useCartStore()
 
   return (
     <Drawer>
@@ -30,10 +31,10 @@ export default function CartDrawer() {
       </DrawerTrigger>
       <DrawerContent className="min-h-50vh">
         <DrawerHeader>
-          <h2 className="text-xl font-bold">Cart</h2>
+          <CartMessage />
         </DrawerHeader>
-        <div className='overflow-auto p-4'>
-          <CartItems />
+        <div className="overflow-auto p-4">
+          { checkoutProgress === 'cart-page' && <CartItems />}
         </div>
       </DrawerContent>
     </Drawer>

@@ -1,35 +1,37 @@
-'use sever';
+'use sever'
 
-import { eq } from 'drizzle-orm';
-import { db } from '..';
-import { emailTokens, passwordResetTokens, twoFactorTokens, users } from '../schema';
-import crypto from 'crypto';
+import crypto from 'node:crypto'
+import { eq } from 'drizzle-orm'
+import { db } from '..'
+import { emailTokens, passwordResetTokens, twoFactorTokens, users } from '../schema'
 
-export const getVerificationTokenByEmail = async (email: string) => {
+export async function getVerificationTokenByEmail(email: string) {
   try {
     const token = await db.query.emailTokens.findFirst({
       where: eq(emailTokens.token, email),
-    });
+    })
 
-    return token;
-  } catch (error) {
-    console.error(`error from tokens.ts: ${error}`);
-    return null;
+    return token
   }
-};
+  catch (error) {
+    console.error(`error from tokens.ts: ${error}`)
+    return null
+  }
+}
 
-export const generateEmailVerificationToken = async (email: string) => {
-  const token = crypto.randomUUID();
-  const expires = new Date(new Date().getTime() + 3600 * 1000);
+export async function generateEmailVerificationToken(email: string) {
+  const token = crypto.randomUUID()
+  const expires = new Date(new Date().getTime() + 3600 * 1000)
 
-  const existingToken = await getVerificationTokenByEmail(email); // Check if token already exists
+  const existingToken = await getVerificationTokenByEmail(email) // Check if token already exists
 
   if (existingToken) {
     try {
-      await db.delete(emailTokens).where(eq(emailTokens.id, existingToken.id));
-    } catch (error) {
-      console.error(`error from tokens.ts: ${error}`);
-      return null;
+      await db.delete(emailTokens).where(eq(emailTokens.id, existingToken.id))
+    }
+    catch (error) {
+      console.error(`error from tokens.ts: ${error}`)
+      return null
     }
   }
 
@@ -40,103 +42,109 @@ export const generateEmailVerificationToken = async (email: string) => {
       token,
       expires,
     })
-    .returning();
+    .returning()
 
-  return newToken;
-};
+  return newToken
+}
 
-export const newVerification = async (token: string) => {
-  const existingToken = await getVerificationTokenByEmail(token);
-  if (!existingToken) return { error: 'Invalid token' };
+export async function newVerification(token: string) {
+  const existingToken = await getVerificationTokenByEmail(token)
+  if (!existingToken)
+    return { error: 'Invalid token' }
 
-  const hasExpired = new Date(existingToken.expires) < new Date();
+  const hasExpired = new Date(existingToken.expires) < new Date()
 
   if (hasExpired) {
-    return { error: 'Token has expired' };
+    return { error: 'Token has expired' }
   }
 
   const existingUser = await db.query.users.findFirst({
     where: eq(users.email, existingToken.email),
-  });
+  })
 
   if (!existingUser) {
-    return { error: 'User not found' };
+    return { error: 'User not found' }
   }
   await db.update(users).set({
     emailVerified: new Date(),
     email: existingToken.email,
-  });
+  })
 
-  await db.delete(emailTokens).where(eq(emailTokens.id, existingToken.id));
+  await db.delete(emailTokens).where(eq(emailTokens.id, existingToken.id))
 
-  return { success: 'Email verified' };
-};
+  return { success: 'Email verified' }
+}
 
-export const getPasswordResetTokenbyToken = async (token: string) => {
+export async function getPasswordResetTokenbyToken(token: string) {
   try {
     const passwordResetToken = await db.query.passwordResetTokens.findFirst({
       where: eq(passwordResetTokens.token, token),
-    });
+    })
 
-    return passwordResetToken;
-  } catch (error) {
-    console.error(`error from tokens.ts: ${error}`);
-    return null;
+    return passwordResetToken
   }
-};
+  catch (error) {
+    console.error(`error from tokens.ts: ${error}`)
+    return null
+  }
+}
 
-export const getPasswordResetTokenbyEmail = async (email: string) => {
+export async function getPasswordResetTokenbyEmail(email: string) {
   try {
     const passwordResetToken = await db.query.passwordResetTokens.findFirst({
       where: eq(passwordResetTokens.email, email),
-    });
+    })
 
-    return passwordResetToken;
-  } catch (error) {
-    console.error(`error from tokens.ts: ${error}`);
-    return null;
+    return passwordResetToken
   }
-};
-export const getTwoFactorTokenByEmail = async (email: string) => {
+  catch (error) {
+    console.error(`error from tokens.ts: ${error}`)
+    return null
+  }
+}
+export async function getTwoFactorTokenByEmail(email: string) {
   try {
     const twoFactorToken = await db.query.twoFactorTokens.findFirst({
       where: eq(twoFactorTokens.email, email),
-    });
+    })
 
-    return twoFactorToken;
-  } catch (error) {
-    console.error(`error from tokens.ts: ${error}`);
-    return null;
+    return twoFactorToken
   }
-};
+  catch (error) {
+    console.error(`error from tokens.ts: ${error}`)
+    return null
+  }
+}
 
-export const getTwoFactorTokenByToken = async (token: string) => {
+export async function getTwoFactorTokenByToken(token: string) {
   try {
     const twoFactorToken = await db.query.twoFactorTokens.findFirst({
       where: eq(twoFactorTokens.token, token),
-    });
+    })
 
-    return twoFactorToken;
-  } catch (error) {
-    console.error(`error from tokens.ts: ${error}`);
-    return null;
+    return twoFactorToken
   }
-};
+  catch (error) {
+    console.error(`error from tokens.ts: ${error}`)
+    return null
+  }
+}
 
-export const generatePasswordResetToken = async (email: string) => {
+export async function generatePasswordResetToken(email: string) {
   try {
-    const token = crypto.randomUUID();
+    const token = crypto.randomUUID()
 
-    const expires = new Date(new Date().getTime() + 3600 * 1000);
+    const expires = new Date(new Date().getTime() + 3600 * 1000)
 
-    const existingToken = await getPasswordResetTokenbyEmail(email);
+    const existingToken = await getPasswordResetTokenbyEmail(email)
 
     if (existingToken) {
       try {
-        await db.delete(passwordResetTokens).where(eq(passwordResetTokens.id, existingToken.id));
-      } catch (error) {
-        console.error(`error from tokens.ts: ${error}`);
-        return null;
+        await db.delete(passwordResetTokens).where(eq(passwordResetTokens.id, existingToken.id))
+      }
+      catch (error) {
+        console.error(`error from tokens.ts: ${error}`)
+        return null
       }
     }
     const passwordResetToken = await db
@@ -146,28 +154,30 @@ export const generatePasswordResetToken = async (email: string) => {
         token,
         expires,
       })
-      .returning();
-    return passwordResetToken;
-  } catch (error) {
-    console.error(`error from tokens.ts: ${error}`);
-    return null;
+      .returning()
+    return passwordResetToken
   }
-};
+  catch (error) {
+    console.error(`error from tokens.ts: ${error}`)
+    return null
+  }
+}
 
-export const generateTwoFactorToken = async (email: string) => {
+export async function generateTwoFactorToken(email: string) {
   try {
-    const token = crypto.randomInt(100_000, 1_000_000).toString();
+    const token = crypto.randomInt(100_000, 1_000_000).toString()
 
-    const expires = new Date(new Date().getTime() + 3600 * 1000);
+    const expires = new Date(new Date().getTime() + 3600 * 1000)
 
-    const existingToken = await getTwoFactorTokenByEmail(email);
+    const existingToken = await getTwoFactorTokenByEmail(email)
 
     if (existingToken) {
       try {
-        await db.delete(twoFactorTokens).where(eq(twoFactorTokens.id, existingToken.id));
-      } catch (error) {
-        console.error(`error from tokens.ts: ${error}`);
-        return null;
+        await db.delete(twoFactorTokens).where(eq(twoFactorTokens.id, existingToken.id))
+      }
+      catch (error) {
+        console.error(`error from tokens.ts: ${error}`)
+        return null
       }
     }
     const twoFactorToken = await db
@@ -177,10 +187,11 @@ export const generateTwoFactorToken = async (email: string) => {
         token,
         expires,
       })
-      .returning();
-    return twoFactorToken;
-  } catch (error) {
-    console.error(`error from tokens.ts: ${error}`);
-    return null;
+      .returning()
+    return twoFactorToken
   }
-};
+  catch (error) {
+    console.error(`error from tokens.ts: ${error}`)
+    return null
+  }
+}
