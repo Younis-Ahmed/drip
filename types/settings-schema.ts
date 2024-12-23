@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const SettingsSchema = z
   .object({
@@ -10,14 +10,14 @@ export const SettingsSchema = z
     newPassword: z.optional(z.string().min(8)),
   })
   .refine(
-    data => {
+    (data) => {
       if (!data.password && !data.newPassword) {
-        return false;
+        return false
       }
-      return true;
+      return true
     },
     {
       message: 'New password is required if you want to change your password.',
       path: ['newPassword'],
     },
-  );
+  )
