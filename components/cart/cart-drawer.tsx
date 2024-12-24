@@ -6,6 +6,7 @@ import { ShoppingBag } from 'lucide-react'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTrigger } from '../ui/drawer'
 import CartItems from './cart-items'
 import CartMessage from './cart-message'
+import Payment from './payment'
 
 export default function CartDrawer() {
   const { cart, checkoutProgress } = useCartStore()
@@ -35,6 +36,7 @@ export default function CartDrawer() {
         </DrawerHeader>
         <div className="overflow-auto p-4">
           { checkoutProgress === 'cart-page' && <CartItems />}
+          { checkoutProgress === 'payment-page' && <Payment />}
         </div>
       </DrawerContent>
     </Drawer>
