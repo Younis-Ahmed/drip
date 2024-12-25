@@ -27,6 +27,7 @@ export const users = pgTable('user', {
   image: text('image'),
   twoFactorEnabled: boolean('twoFactorEnabled').default(false),
   role: RoleEnum('role').default('USER'),
+  customerID: text('customerID'),
 })
 
 export const accounts = pgTable(
@@ -226,6 +227,7 @@ export const orderProduct = pgTable('orderProduct', {
   productID: serial('productID')
     .notNull()
     .references(() => products.id, { onDelete: 'cascade' }),
+  orderID: serial('orderID').notNull().references(() => orders.id, { onDelete: 'cascade' }),
 })
 
 export const userRelations = relations(users, ({ many }) => ({
@@ -240,4 +242,22 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
     relationName: 'user_orders',
   }),
   orderProduct: many(orderProduct, { relationName: 'orderProduct' }),
+}))
+
+export const orderProductRelations = relations(orderProduct, ({ one }) => ({
+  order: one(orders, {
+    fields: [orderProduct.orderID],
+    references: [orders.id],
+    relationName: 'orderProduct',
+  }),
+  product: one(products, {
+    fields: [orderProduct.productID],
+    references: [products.id],
+    relationName: 'Products',
+  }),
+  productVariants: one(productVariants, {
+    fields: [orderProduct.productVariantsID],
+    references: [productVariants.id],
+    relationName: 'productVariants',
+  }),
 }))
