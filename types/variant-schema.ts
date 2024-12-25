@@ -1,4 +1,4 @@
-import * as z from 'zod';
+import * as z from 'zod'
 
 export const VariantSchema = z.object({
   productID: z.number(),
@@ -20,4 +20,4 @@ export const VariantSchema = z.object({
       }),
     )
     .min(1, 'At least one image is required'),
-});
+})
