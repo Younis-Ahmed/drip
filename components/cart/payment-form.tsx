@@ -2,9 +2,12 @@
 
 import { log } from 'node:console'
 import { useCartStore } from '@/lib/client-store'
+import { createOrder } from '@/server/actions/create-order'
 import { createPaymentIntent } from '@/server/actions/create-payment-intent'
 import { AddressElement, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import { useAction } from 'next-safe-action/hooks'
 import React, { useState } from 'react'
+import { toast } from 'sonner'
 import { Button } from '../ui/button'
 
 interface PaymentIntentResult {
@@ -21,6 +24,18 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
   const { cart } = useCartStore()
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+
+  const { execute } = useAction(createOrder, {
+    onSuccess: ({ data }) => {
+      if (data?.error) {
+        toast.error(data.error)
+      }
+      if (data?.success) {
+        setLoading(false)
+        toast.success(data.success)
+      }
+    },
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -70,7 +85,15 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
       }
       else {
         setLoading(false)
-        log('save the order')
+        execute({
+          status: 'pending',
+          total: totalPrice,
+          products: cart.map(item => ({
+            quantity: item.variant.quantity,
+            productID: item.id,
+            variantID: item.variant.variantID,
+          })),
+        })
       }
     }
   }
