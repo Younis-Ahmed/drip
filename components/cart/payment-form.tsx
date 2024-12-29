@@ -21,7 +21,7 @@ interface PaymentIntentResult {
 export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
   const stripe = useStripe()
   const elements = useElements()
-  const { cart } = useCartStore()
+  const { cart, setCheckoutProgress } = useCartStore()
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -33,6 +33,7 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
       if (data?.success) {
         setLoading(false)
         toast.success(data.success)
+        setCheckoutProgress('confirmation-page')
       }
     },
   })
@@ -52,7 +53,7 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
     }
 
     const data = await createPaymentIntent({
-      amount: totalPrice,
+      amount: totalPrice * 100,
       currency: 'usd',
       cart: cart.map(item => ({
         quantity: item.variant.quantity,
@@ -105,8 +106,8 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
         mode: 'shipping',
       }}
       />
-      <Button disabled={!stripe || !elements}>
-        <span>Pay now</span>
+      <Button className="my-4 w-full" disabled={!stripe || !elements || loading}>
+        {loading ? 'Processing...' : 'Pay Now'}
       </Button>
     </form>
 
