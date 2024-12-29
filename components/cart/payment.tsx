@@ -21,7 +21,7 @@ export default function Payment() {
           locale: 'en',
           mode: 'payment',
           currency: 'usd',
-          amount: total,
+          amount: total * 100,
         }}
       >
         <PaymentForm totalPrice={total}/>

@@ -37,6 +37,7 @@ export default function CartDrawer() {
         <div className="overflow-auto p-4">
           { checkoutProgress === 'cart-page' && <CartItems />}
           { checkoutProgress === 'payment-page' && <Payment />}
+          { checkoutProgress === 'confirmation-page' && <CartMessage />}
         </div>
       </DrawerContent>
     </Drawer>
