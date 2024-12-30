@@ -10,10 +10,10 @@ import OrderConfirmed from './order-confirmed'
 import Payment from './payment'
 
 export default function CartDrawer() {
-  const { cart, checkoutProgress } = useCartStore()
+  const { cart, checkoutProgress, cartOpen, setCartOpen } = useCartStore()
 
   return (
-    <Drawer>
+    <Drawer open={cartOpen} onOpenChange={setCartOpen}>
       <DrawerTrigger>
         <div className="relative px-2">
           <AnimatePresence>
