@@ -1,6 +1,6 @@
 'use client'
 
-import { log } from 'node:console'
+import { clear, log } from 'node:console'
 import { useCartStore } from '@/lib/client-store'
 import { createOrder } from '@/server/actions/create-order'
 import { createPaymentIntent } from '@/server/actions/create-payment-intent'
@@ -21,7 +21,7 @@ interface PaymentIntentResult {
 export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
   const stripe = useStripe()
   const elements = useElements()
-  const { cart, setCheckoutProgress } = useCartStore()
+  const { cart, setCheckoutProgress, clearCart } = useCartStore()
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -34,6 +34,7 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
         setLoading(false)
         toast.success(data.success)
         setCheckoutProgress('confirmation-page')
+        clearCart()
       }
     },
   })
