@@ -8,13 +8,14 @@ import confirmed from '../../assets/confirmed.json'
 import { Button } from '../ui/button'
 
 export default function OrderConfirmed() {
-  const { setCheckoutProgress } = useCartStore()
+  const { setCheckoutProgress, setCartOpen } = useCartStore()
   return (
     <div className="flex flex-col items-center gap-4">
       <h2 className="text-2xl font-medium">Thank you for your purchase!</h2>
       <Link href="/dashboard/orders">
         <Button onClick={() => {
           setCheckoutProgress('cart-page')
+          setCartOpen(false)
         }}
         >
           View your order
