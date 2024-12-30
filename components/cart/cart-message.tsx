@@ -10,6 +10,7 @@ export default function CartMessage() {
 
   return (
     <motion.div
+      className="text-center"
       animate={{ opacity: 1, x: 0 }}
       initial={{ opacity: 0, x: 10 }}
     >
@@ -28,7 +29,7 @@ export default function CartMessage() {
               </span>
             )
           : null}
-        {checkoutProgress === 'confirmation-page' ? 'Order Confirmed' : null}
+        {checkoutProgress === 'confirmation-page' ? 'You will recieve an email with your receipt!' : null}
       </DrawerDescription>
     </motion.div>
   )

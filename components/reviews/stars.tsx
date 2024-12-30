@@ -24,11 +24,15 @@ export default function Stars({
           )}
         />
       ))}
-      <span className="ml-2 text-sm font-bold text-secondary-foreground">
-        {totalReviews}
-        {' '}
-        reviews
-      </span>
+
+      { totalReviews
+        ? (
+            <span className="ml-2 text-sm font-bold text-secondary-foreground">
+              {totalReviews}
+              reviews
+            </span>
+          )
+        : null}
     </div>
   )
 }
