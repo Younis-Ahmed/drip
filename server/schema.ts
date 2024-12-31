@@ -216,6 +216,7 @@ export const orders = pgTable('orders', {
   status: text('status').notNull(),
   created: timestamp('created', { mode: 'date' }).notNull().defaultNow(),
   receiptURL: text('receiptURL'),
+  paymentIntentId: text('paymentIntentId'),
 })
 
 export const orderProduct = pgTable('orderProduct', {
