@@ -11,7 +11,7 @@ const action = createSafeActionClient()
 
 export const createOrder = action
   .schema(orderSchema)
-  .action(async ({ parsedInput: { products, status, total } }) => {
+  .action(async ({ parsedInput: { products, status, total, paymentIntentId } }) => {
     const user = await auth()
     if (!user)
       return { error: 'You must be logged in to create an order' }
@@ -19,6 +19,7 @@ export const createOrder = action
     const order = await db.insert(orders).values({
       status,
       total,
+      paymentIntentId,
       userID: user.user.id,
     }).returning()
 
