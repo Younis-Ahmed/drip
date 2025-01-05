@@ -8,6 +8,7 @@ import {
 import { db } from '@/server'
 import { orderProduct } from '@/server/schema'
 import { desc } from 'drizzle-orm'
+import Earnings from './earnings'
 import Sales from './sales'
 
 export default async function Analytics() {
@@ -41,7 +42,8 @@ export default async function Analytics() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-            <Sales totalOrders={totalOrders}/>
+          <Sales totalOrders={totalOrders} />
+          <Earnings totalOrders={totalOrders} />
         </CardContent>
       </Card>
     )
