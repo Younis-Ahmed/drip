@@ -34,23 +34,23 @@ export async function POST(req: NextRequest) {
   // Handle the event just an example!
   switch (event.type) {
     case 'payment_intent.succeeded':
-      { const retrieveOrder = await stripe.paymentIntents.retrieve(
-        event.data.object.id,
-        { expand: ['latest_charge'] },
-      )
-      const charge = retrieveOrder.latest_charge as Stripe.Charge
+    { const retrieveOrder = await stripe.paymentIntents.retrieve(
+      event.data.object.id,
+      { expand: ['latest_charge'] },
+    )
+    const charge = retrieveOrder.latest_charge as Stripe.Charge
 
-      await db
-        .update(orders)
-        .set({
-          status: 'succeeded',
-          receiptURL: charge.receipt_url,
-        })
-        .where(eq(orders.paymentIntentId, event.data.object.id))
-        .returning()
+    await db
+      .update(orders)
+      .set({
+        status: 'succeeded',
+        receiptURL: charge.receipt_url,
+      })
+      .where(eq(orders.paymentIntentId, event.data.object.id))
+      .returning()
 
-      // Then define and call a function to handle the event product.created
-      break }
+    // Then define and call a function to handle the event product.created
+    break }
 
     default:
       console.log(`${event.type}`)
