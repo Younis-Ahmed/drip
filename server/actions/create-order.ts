@@ -1,7 +1,6 @@
 'use server'
 
 import { orderSchema } from '@/types/order-schema'
-import Lottie from 'lottie-react'
 import { createSafeActionClient } from 'next-safe-action'
 import { db } from '..'
 import { auth } from '../auth'
