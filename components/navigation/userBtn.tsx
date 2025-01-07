@@ -41,7 +41,7 @@ export function UserBtn({ user }: Session) {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger>
-        <Avatar className='w-7 h-7'>
+        <Avatar className="w-7 h-7">
           {user?.image && <Image src={user.image} alt={user.name || 'User\'s avatar'} fill={true} sizes="" />}
           {!user?.image && (
             <AvatarFallback className="bg-primary/25">
