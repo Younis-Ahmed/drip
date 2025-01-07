@@ -1,6 +1,5 @@
 'use client'
 
-import { clear, log } from 'node:console'
 import { useCartStore } from '@/lib/client-store'
 import { createOrder } from '@/server/actions/create-order'
 import { createPaymentIntent } from '@/server/actions/create-payment-intent'
