@@ -69,7 +69,7 @@ body {
 }
 
 [data-ut-element='button'][data-state='uploading']::after {
-  @apply bg-primary/50
+  @apply bg-primary/50;
 }
 /* @layer base {
   :root {
@@ -127,4 +127,3 @@ body {
     --chart-5: 340 75% 55%;
   }
 } */
-
