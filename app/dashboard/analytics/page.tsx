@@ -11,6 +11,8 @@ import { desc } from 'drizzle-orm'
 import Earnings from './earnings'
 import Sales from './sales'
 
+export const revalidate = 0
+
 export default async function Analytics() {
   const totalOrders = await db.query.orderProduct.findMany({
     orderBy: [desc(orderProduct.id)],
