@@ -1,32 +1,89 @@
 'use client'
 
 import type { TotalOrders } from '@/lib/infer-types'
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge, Router } from 'lucide-react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+import { Badge } from 'lucide-react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useMemo } from 'react'
+import { Bar, BarChart, ResponsiveContainer, Tooltip } from 'recharts'
+import { monthlyChart } from './monthly-chart'
+import { weeklyChart } from './weekly-chart'
 
 export default function Earnings({ totalOrders }: { totalOrders: TotalOrders[] }) {
-    const router = useRouter()
-    const searchParams = useSearchParams()
-    const filter = searchParams.get('filter') || 'week'
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const filter = searchParams.get('filter') || 'week'
 
+  const chartItems = totalOrders.map(order => ({ date: order.order.created!, revenue: order.order.total }))
+
+  const activeChart = useMemo(() => {
+    const weekly = weeklyChart(chartItems)
+    const monthly = monthlyChart(chartItems)
+
+    if (filter === 'week')
+      return weekly
+    if (filter === 'month')
+      return monthly
+  }, [filter])
+
+  const activeTotal = useMemo(() => {
+    if (filter === 'week')
+      return monthlyChart(chartItems).reduce((acc, item) => acc + item.revenue, 0)
+    return weeklyChart(chartItems).reduce((acc, item) => acc + item.revenue, 0)
+  }, [filter])
 
   return (
-    <Card>
+    <Card className="flex-1 shrink-0 h-full">
       <CardHeader>
-        <CardTitle>Your Revenue 0</CardTitle>
+        <CardTitle>
+          Your Revenue $
+          {activeTotal}
+        </CardTitle>
         <CardDescription>Here are your recent earnings</CardDescription>
         <div className="flex gap-2 items-center">
-            <Badge onClick={() => router.push('/dashboard/analytics/?filter=week', { scroll: false })}
-                className={cn('cursor-pointer', filter === 'week' ? 'bg-primary': 'bg-primary/25')}>
-                This week
-            </Badge>
-            <Badge onClick={() => router.push('/dashboard/analytics/?filter=month', { scroll: false })}
-                className={cn('cursor-pointer', filter === 'week' ? 'bg-primary': 'bg-primary/25')}>
-                This month
-            </Badge>
+          <Badge
+            onClick={() => router.push('/dashboard/analytics/?filter=week', { scroll: false })}
+            className={cn('cursor-pointer', filter === 'week' ? 'bg-primary' : 'bg-primary/25')}
+          >
+            This week
+          </Badge>
+          <Badge
+            onClick={() => router.push('/dashboard/analytics/?filter=month', { scroll: false })}
+            className={cn('cursor-pointer', filter === 'week' ? 'bg-primary' : 'bg-primary/25')}
+          >
+            This month
+          </Badge>
         </div>
+        <CardContent className="h-96">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={activeChart}>
+              <Tooltip content={prop => (
+                <div>
+                  {prop.payload?.map((item) => {
+                    return (
+                      <div
+                        className="bg-primary/25 py-2 px-4 rounded-md shadow-lg"
+                        key={item.payload.date}
+                      >
+                        <p>
+                          Revenue: $
+                          {item.value}
+                        </p>
+                        <p>
+                          Date:
+                          {item.payload.date}
+                        </p>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+              />
+              <Bar dataKey="revenue" className="fill-primary" />
+            </BarChart>
+          </ResponsiveContainer>
+        </CardContent>
       </CardHeader>
     </Card>
   )
