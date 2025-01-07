@@ -8,7 +8,10 @@ import {
 import { db } from '@/server'
 import { orderProduct } from '@/server/schema'
 import { desc } from 'drizzle-orm'
+import Earnings from './earnings'
 import Sales from './sales'
+
+export const revalidate = 0
 
 export default async function Analytics() {
   const totalOrders = await db.query.orderProduct.findMany({
@@ -41,7 +44,8 @@ export default async function Analytics() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-            <Sales totalOrders={totalOrders}/>
+          <Sales totalOrders={totalOrders} />
+          <Earnings totalOrders={totalOrders} />
         </CardContent>
       </Card>
     )

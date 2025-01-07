@@ -6,5 +6,6 @@ export default antfu({
   },
   ignores: ['dist', 'node_modules', 'tailwind.config.ts'],
   extends: ['next/core-web-vitals', 'next/typescript'],
+  formatters: true,
 
 })

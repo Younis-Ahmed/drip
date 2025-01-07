@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import Image from 'next/image'
 
 export default function Sales({ totalOrders }: { totalOrders: TotalOrders[] }) {
@@ -30,11 +30,11 @@ export default function Sales({ totalOrders }: { totalOrders: TotalOrders[] }) {
           </TableHeader>
           <TableBody>
             {totalOrders.map(order => (
-              <TableRow key={order.id} className='font-medium'>
+              <TableRow key={order.id} className="font-medium">
                 <TableCell>
                   {order.order.user.image && order.order.user.name
                     ? (
-                        <div className="flex  gap-2 items-center">
+                        <div className="flex w-32  gap-2 items-center">
                           <Image src={order.order.user.image} alt={order.order.user.name} width={25} height={25} className="rounded-full" />
                           <p className="text-xs font-medium">{order.order.user.name}</p>
                         </div>
