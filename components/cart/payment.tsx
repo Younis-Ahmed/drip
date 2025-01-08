@@ -20,7 +20,6 @@ export default function Payment() {
       <Elements
         stripe={stripe}
         options={{
-          locale: 'en',
           mode: 'payment',
           currency: 'usd',
           amount: total * 100,
