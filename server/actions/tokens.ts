@@ -1,6 +1,6 @@
 'use sever'
 
-import crypto from 'node:crypto'
+import crypto from 'crypto'
 import { eq } from 'drizzle-orm'
 import { db } from '..'
 import { emailTokens, passwordResetTokens, twoFactorTokens, users } from '../schema'

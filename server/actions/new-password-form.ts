@@ -1,6 +1,6 @@
 'use server'
 
-import process from 'node:process'
+import process from 'process'
 import { newPasswordSchema } from '@/types/new-password-schema'
 import { Pool } from '@neondatabase/serverless'
 import bcrypt from 'bcrypt'

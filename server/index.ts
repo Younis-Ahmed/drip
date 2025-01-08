@@ -1,4 +1,4 @@
-import process from 'node:process'
+import process from 'process'
 import * as schema from '@/server/schema'
 import { neon } from '@neondatabase/serverless'
 import { drizzle } from 'drizzle-orm/neon-http'

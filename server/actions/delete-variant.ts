@@ -1,6 +1,6 @@
 'use server'
 
-import process from 'node:process'
+import process from 'process'
 import { algoliasearch } from 'algoliasearch'
 import { eq } from 'drizzle-orm'
 import { createSafeActionClient } from 'next-safe-action'

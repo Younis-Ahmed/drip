@@ -1,4 +1,4 @@
-import process from 'node:process'
+import process from 'process'
 import { db } from '@/server'
 import { loginSchema } from '@/types/login-schema'
 import { DrizzleAdapter } from '@auth/drizzle-adapter'
