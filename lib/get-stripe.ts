@@ -1,5 +1,5 @@
 import type { Stripe } from '@stripe/stripe-js'
-import process from 'node:process'
+import process from 'process'
 import { loadStripe } from '@stripe/stripe-js'
 
 let stripePromise: Promise<Stripe | null>

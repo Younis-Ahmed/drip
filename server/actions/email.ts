@@ -1,6 +1,6 @@
 'use server'
 
-import process from 'node:process'
+import process from 'process'
 import { EmailTemplate } from '@/components/ui/email-template'
 import getBaseURL from '@/lib/base-url'
 import { Resend } from 'resend'

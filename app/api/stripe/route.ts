@@ -1,5 +1,5 @@
-import { Buffer } from 'node:buffer'
-import process from 'node:process'
+import { Buffer } from 'buffer'
+import process from 'process'
 import { db } from '@/server'
 import { orders } from '@/server/schema'
 import { eq } from 'drizzle-orm'
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     )
     const charge = retrieveOrder.latest_charge as Stripe.Charge
 
-    await db
+    const customer = await db
       .update(orders)
       .set({
         status: 'succeeded',
@@ -48,6 +48,8 @@ export async function POST(req: NextRequest) {
       })
       .where(eq(orders.paymentIntentId, event.data.object.id))
       .returning()
+
+    console.log(`PaymentIntent for ${customer[0]} succeeded`)
 
     // Then define and call a function to handle the event product.created
     break }

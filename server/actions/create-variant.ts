@@ -1,6 +1,6 @@
 'use server'
 
-import process from 'node:process'
+import process from 'process'
 import { VariantSchema } from '@/types/variant-schema'
 import { algoliasearch } from 'algoliasearch'
 import { eq } from 'drizzle-orm'
