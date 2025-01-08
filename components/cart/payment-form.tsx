@@ -5,24 +5,19 @@ import { createOrder } from '@/server/actions/create-order'
 import { createPaymentIntent } from '@/server/actions/create-payment-intent'
 import { AddressElement, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { useAction } from 'next-safe-action/hooks'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '../ui/button'
 
-interface PaymentIntentResult {
-  error?: string
-  success?: {
-    paymentIntentID: string
-    clientSecretID: string
-    user: string
-  }
-}
 export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
   const stripe = useStripe()
   const elements = useElements()
-  const { cart, setCheckoutProgress, clearCart } = useCartStore()
+  const { cart, setCheckoutProgress, clearCart, setCartOpen } = useCartStore()
   const [loading, setLoading] = useState(false)
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const [errorMessage, setErrorMessage] = useState('')
+  const router = useRouter()
 
   const { execute } = useAction(createOrder, {
     onSuccess: ({ data }) => {
@@ -62,46 +57,59 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
         price: item.price,
         image: item.image,
       })),
-    }) as PaymentIntentResult
+    })
 
-    if (data?.error) {
-      setErrorMessage(data.error)
+    if (data?.data?.error) {
+      setErrorMessage(data?.data?.error)
       setLoading(false)
+      router.push('/auth/login')
+      setCartOpen(false)
       return
     }
 
-    if (data?.success) {
-      const { error } = await stripe.confirmPayment({
-        elements,
-        clientSecret: data?.success.clientSecretID,
-        redirect: 'if_required',
-        confirmParams: {
-          return_url: 'http://localhost:3000/success',
-          receipt_email: data.success.user,
-        },
-      })
-      if (error) {
-        setErrorMessage(error.message!)
-        setLoading(false)
+    if (data?.data?.success) {
+      const clientSecretID = data.data.success.clientSecretID
+
+      if (typeof clientSecretID === 'string' && typeof data.data.success.user === 'string') {
+        const { error } = await stripe.confirmPayment({
+          elements,
+          clientSecret: clientSecretID,
+          redirect: 'if_required',
+          confirmParams: {
+            return_url: 'http://localhost:3000/success',
+            receipt_email: data.data.success.user,
+          },
+        })
+
+        if (error) {
+          setErrorMessage(error.message!)
+          setLoading(false)
+          // eslint-disable-next-line no-useless-return
+          return
+        }
+        else {
+          setLoading(false)
+          execute({
+            status: 'pending',
+            total: totalPrice,
+            paymentIntentId: data.data.success.paymentIntentID,
+            products: cart.map(item => ({
+              quantity: item.variant.quantity,
+              productID: item.id,
+              variantID: item.variant.variantID,
+            })),
+          })
+        }
       }
       else {
+        setErrorMessage('Invalid client secret ID')
         setLoading(false)
-        execute({
-          status: 'pending',
-          total: totalPrice,
-          paymentIntentId: data.success.paymentIntentID,
-          products: cart.map(item => ({
-            quantity: item.variant.quantity,
-            productID: item.id,
-            variantID: item.variant.variantID,
-          })),
-        })
       }
     }
   }
 
   return (
-    <form action="" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <PaymentElement />
       <AddressElement options={{
         mode: 'shipping',
