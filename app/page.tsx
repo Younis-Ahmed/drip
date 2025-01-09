@@ -1,3 +1,4 @@
+import Algolia from '@/components/products/algolia'
 import Products from '@/components/products/products'
 import { db } from '@/server'
 
@@ -12,8 +13,10 @@ export default async function Home() {
     },
     orderBy: (productVariants, { desc }) => [desc(productVariants.id)],
   })
+
   return (
     <main className="">
+      <Algolia />
       <Products variants={data} />
     </main>
   )
