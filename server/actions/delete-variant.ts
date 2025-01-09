@@ -12,8 +12,8 @@ import { productVariants } from '../schema'
 const action = createSafeActionClient()
 
 const client = algoliasearch(
-  process.env.ALGOLIA_APP_ID as string,
-  process.env.ALGOLIA_SECRET_KEY as string,
+  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID as string,
+  process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY as string,
 )
 
 export const deleteVariant = action
