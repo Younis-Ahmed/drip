@@ -12,7 +12,7 @@ import { products, productVariants, variantsImages, variantsTags } from '../sche
 const action = createSafeActionClient()
 
 const client = algoliasearch(
-  process.env.ALGOLIA_APP_ID as string,
+  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID as string,
   process.env.ALGOLIA_WRITE_KEY as string,
 )
 
