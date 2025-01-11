@@ -38,11 +38,6 @@ function Hit({
 }) {
   if (!hit)
     return
-  // console.log(`hit = ${JSON.stringify(hit.variantsImages, null, 2)}`)
-  if (!hit._highlightResult?.title || hit._highlightResult.title.matchLevel === 'none')
-    return null
-  // if (!hit._highlightResult?.productType || hit._highlightResult.productType.matchLevel === 'none')
-  //   return null
 
   return (
     <div className="p-4 mb-2 hover:bg-secondary ">
