@@ -22,15 +22,28 @@ export async function POST(req: NextRequest) {
 
   let event
 
-  type StripeWebhookEvent = any
 
   try {
     event = stripe.webhooks.constructEvent(reqBuffer, sig, signingSecret)
   }
-  catch (err: StripeWebhookEvent) {
-    return new NextResponse(`Webhook Error: ${err.message}`, {
+  catch (err: unknown) {
+    let errorMessage = 'Unknown error';
+    if (err instanceof Stripe.errors.StripeSignatureVerificationError) {
+      errorMessage = 'Signature verification failed';
+    } else if (err instanceof Stripe.errors.StripeInvalidRequestError) {
+      errorMessage = 'Invalid request';
+    } else if (err instanceof Stripe.errors.StripeAPIError) {
+      errorMessage = 'Stripe API error';
+    } else if (err instanceof Stripe.errors.StripeAuthenticationError) {
+      errorMessage = 'Authentication error';
+    } else if (err instanceof Stripe.errors.StripeRateLimitError) {
+      errorMessage = 'Rate limit exceeded';
+    } else if (err instanceof Error) {
+      errorMessage = err.message;
+    }
+    return new NextResponse(`Webhook Error: ${errorMessage}`, {
       status: 400,
-    })
+    });
   }
 
   // Handle the event just an example!
