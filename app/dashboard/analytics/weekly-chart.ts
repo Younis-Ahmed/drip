@@ -1,4 +1,3 @@
-import { date } from 'drizzle-orm/mysql-core'
 import CheckDate from './check-date'
 
 export function weeklyChart(chartItems: { date: Date, revenue: number }[]) {
