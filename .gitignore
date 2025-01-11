@@ -8,7 +8,7 @@
 
 # inserting product scripts
 insert-products.mjs
-
+eslint.config.mjs
 /coverage
 
 # next.js
