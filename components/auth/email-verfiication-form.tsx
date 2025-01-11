@@ -34,7 +34,7 @@ export function EmailVerificationForm() {
 
   useEffect(() => {
     handleVerification()
-  }, [])
+  }, [handleVerification])
 
   return (
     <AuthCard backBtnLabel="Back to login" backBtnHref="/auth/login" cardTitle="Verify your email">

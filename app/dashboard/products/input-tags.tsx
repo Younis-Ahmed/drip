@@ -17,7 +17,7 @@ type InputTagsProps = InputProps & {
 
 export const InputTags = forwardRef<HTMLInputElement, InputTagsProps>(
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ onChange, value, ...props }, ref) => {
     const [pendingDataPoint, setPendingDataPoint] = useState('')
     const [focused, setFocused] = useState(false)

@@ -22,10 +22,12 @@ export async function POST(req: NextRequest) {
 
   let event
 
+  type StripeWebhookEvent = any
+
   try {
     event = stripe.webhooks.constructEvent(reqBuffer, sig, signingSecret)
   }
-  catch (err: any) {
+  catch (err: StripeWebhookEvent) {
     return new NextResponse(`Webhook Error: ${err.message}`, {
       status: 400,
     })

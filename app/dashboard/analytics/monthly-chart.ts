@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { date } from 'drizzle-orm/mysql-core'
 import BetweenWeeks from './between-weeks'
 import CheckDate from './check-date'

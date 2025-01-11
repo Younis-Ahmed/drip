@@ -15,7 +15,7 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
   const elements = useElements()
   const { cart, setCheckoutProgress, clearCart, setCartOpen } = useCartStore()
   const [loading, setLoading] = useState(false)
-  // eslint-disable-next-line unused-imports/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [errorMessage, setErrorMessage] = useState('')
   const router = useRouter()
 

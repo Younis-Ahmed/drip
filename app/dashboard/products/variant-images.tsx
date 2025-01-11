@@ -32,7 +32,7 @@ export default function VariantImages() {
       <FormField
         control={control}
         name="variantImages"
-        // eslint-disable-next-line unused-imports/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         render={({ field }) => (
           <FormItem>
             <FormLabel>Variant Images</FormLabel>
