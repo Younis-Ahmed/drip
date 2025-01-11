@@ -37,7 +37,8 @@ export default async function Nav() {
                       </Link>
                     </Button>
                   </li>
-                ) : (
+                )
+              : (
                   <li className="flex items-center justify-center">
                     <UserBtn expires={session?.expires ?? ''} user={session?.user} />
                   </li>
