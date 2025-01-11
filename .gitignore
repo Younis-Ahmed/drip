@@ -9,6 +9,7 @@
 # inserting product scripts
 insert-products.mjs
 eslint.config.mjs
+.vscode/settings.json
 /coverage
 
 # next.js
