@@ -4,6 +4,8 @@ import type { VariantsWithProduct } from '@/lib/infer-types'
 import formatPrice from '@/lib/format-price'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import { useMemo } from 'react'
 import { Badge } from '../ui/badge'
 
 interface ProductTypes {
@@ -11,9 +13,21 @@ interface ProductTypes {
 }
 
 export default function Products({ variants }: ProductTypes) {
+  const params = useSearchParams()
+  const tag = params.get('tag')
+
+  const filtered = useMemo(() => {
+    if (tag && variants) {
+      return variants.filter((variant) => {
+        return variant.variantsTags.some(variantTag => variantTag.tag === tag)
+      })
+    }
+    return variants
+  }, [tag])
+
   return (
     <main className="grid gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      {variants.map(variant => (
+      {filtered.map(variant => (
         <Link
           className="py-2"
           key={variant.id}
