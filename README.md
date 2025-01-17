@@ -368,6 +368,5 @@ GET /dashboard/settings
 
 ## Datagase Schema
 
-![diagram-export-1-13-2025-4_56_45-PM](https://github.com/user-attachments/assets/aa942c2e-b095-49de-82e6-4f18431f4c79)
-
+<img src="https://github.com/user-attachments/assets/aa942c2e-b095-49de-82e6-4f18431f4c79" alt="Database Schema" width="600" />
 
